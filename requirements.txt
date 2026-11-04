@@ -1,7 +1,12 @@
-streamlit>=1.50
+# CPU-only PyTorch: avoids ~3 GB of NVIDIA CUDA libraries (no GPU on Streamlit Cloud / Render)
+--extra-index-url https://download.pytorch.org/whl/cpu
 torch
 transformers
-scikit-learn==1.6.1
+streamlit>=1.50
+# Classifier was pickled with scikit-learn 1.6.1; that release has no prebuilt wheel
+# for Python 3.14, so newer Pythons get a compatible release instead of a slow source build.
+scikit-learn==1.6.1; python_version < "3.14"
+scikit-learn>=1.7; python_version >= "3.14"
 pillow
 joblib
 numpy
@@ -9,5 +14,3 @@ pandas
 requests
 gspread
 google-auth
-google-api-python-client
-google-auth-httplib2
