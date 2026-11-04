@@ -1,203 +1,148 @@
 import base64
 import datetime
 import gc
-import io
-import requests
+
 import gspread
-from google.oauth2 import service_account
 import joblib
 import numpy as np
 import pandas as pd
-from PIL import Image
+import requests
 import streamlit as st
 import torch
+from google.oauth2 import service_account
+from PIL import Image
 from transformers import AutoImageProcessor, AutoModel
+
+import ui
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="CeraVLM | Maize Pathology Copilot",
+    page_title="MaizeGPT VLM · Maize Pathology Diagnostics",
     page_icon="🌽",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed",
 )
-
-# --- Professional Agronomy Theme CSS ---
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
-    
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    
-    /* Hero Section */
-    .hero-container {
-        background: linear-gradient(135deg, #0f3d2e 0%, #1b5e20 45%, #2e7d32 100%);
-        border-radius: 18px;
-        padding: 32px 36px;
-        color: #ffffff;
-        margin-bottom: 24px;
-        box-shadow: 0 10px 30px rgba(15, 61, 46, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        position: relative;
-        overflow: hidden;
-    }
-    .hero-title {
-        font-size: 2.2rem;
-        font-weight: 800;
-        margin: 0 0 8px 0;
-        letter-spacing: -0.02em;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .hero-subtitle {
-        font-size: 1.05rem;
-        color: #d1fae5;
-        margin: 0 0 16px 0;
-        max-width: 820px;
-        line-height: 1.5;
-        font-weight: 400;
-    }
-    .tag-pill {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(8px);
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-right: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    /* Metric Cards */
-    .metric-box {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 14px;
-        padding: 16px 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 100%;
-    }
-    .metric-value {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #0f3d2e;
-        line-height: 1.2;
-    }
-    .metric-label {
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
-    /* Diagnosis Specimen Card */
-    .specimen-card {
-        background: #ffffff;
-        border-radius: 16px;
-        border: 1px solid #e2e8f0;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .specimen-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-        border-color: #cbd5e1;
-    }
-
-    /* Severity Badges */
-    .badge-critical {
-        background: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #fecaca;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-    }
-    .badge-warning {
-        background: #fef3c7;
-        color: #92400e;
-        border: 1px solid #fde68a;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-    }
-    .badge-healthy {
-        background: #dcfce7;
-        color: #166534;
-        border: 1px solid #bbf7d0;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-    }
-
-    /* Prescription Pill Container */
-    .rx-box {
-        background: #f8fafc;
-        border-left: 4px solid #16a34a;
-        border-radius: 8px;
-        padding: 12px 16px;
-        margin-top: 12px;
-    }
-    .rx-title {
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: #0f3d2e;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 4px;
-    }
-    .rx-content {
-        font-size: 0.92rem;
-        color: #334155;
-        line-height: 1.45;
-        margin: 0;
-    }
-
-    /* Links */
-    .cloud-link {
-        font-size: 0.84rem;
-        color: #2563eb;
-        text-decoration: none;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-    .cloud-link:hover { text-decoration: underline; }
-</style>
-""", unsafe_allow_html=True)
+ui.load_css()
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+HEALTHY_THRESHOLD = 60.0
 
-# --- Sidebar Pipeline Metadata ---
-with st.sidebar:
-    st.image("https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=500&q=80", use_container_width=True)
-    st.markdown("### 🌾 Pipeline Configuration")
-    st.info("**Vision Core**: Google SigLIP (Patch16-384)\n\n**Agronomic Engine**: Grounded Pathology Rules\n\n**Holdout Accuracy**: 100.00%\n\n**Storage**: ImgBB High-Res Storage")
-    
-    st.markdown("---")
-    st.markdown("### 📋 Field Log Metadata")
-    field_agent = st.text_input("Agronomist / Officer Name", value="Field Officer")
-    plot_id = st.text_input("Plot / Farm Identifier", value="Zone A - Block 4")
-    notes = st.text_area("Field Notes (Optional)", placeholder="E.g., High humidity post-monsoon rain")
+# --- Agronomic Protocols ---
+# tier drives badge colour and ordering: critical > moderate > nutritional > healthy
+MAIZE_AGRONOMIC_PROTOCOLS = {
+    "Charcoal_Rot": {
+        "name": "Charcoal Rot",
+        "agent": "Macrophomina phaseolina",
+        "severity": "High · stalk lodging",
+        "tier": "critical",
+        "chemical": "Carbendazim 50 WP (1 g/L) or Thiophanate-Methyl 70 WP (1 g/L).",
+    },
+    "Fall_Army_worm": {
+        "name": "Fall Armyworm",
+        "agent": "Spodoptera frugiperda",
+        "severity": "Critical · whorl defoliation",
+        "tier": "critical",
+        "chemical": "Chlorantraniliprole 18.5 SC @ 0.4 ml/L OR Emamectin Benzoate 5 SG @ 0.4 g/L.",
+    },
+    "Grey_Leaf_Spot": {
+        "name": "Grey Leaf Spot",
+        "agent": "Cercospora zeae-maydis",
+        "severity": "Moderate to high",
+        "tier": "moderate",
+        "chemical": "Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L water.",
+    },
+    "Maydis_Leaf_Blight": {
+        "name": "Maydis Leaf Blight",
+        "agent": "Bipolaris maydis",
+        "severity": "Moderate",
+        "tier": "moderate",
+        "chemical": "Mancozeb 75 WP @ 2.5 g/L OR Azoxystrobin 23 SC @ 1 ml/L.",
+    },
+    "Nitrogen_Deficiency_in_Maize": {
+        "name": "Nitrogen Deficiency",
+        "agent": "Macronutrient deficiency (N)",
+        "severity": "Nutritional stress",
+        "tier": "nutritional",
+        "chemical": "Top-dress Urea @ 40 kg/ha OR 2% foliar Urea spray.",
+    },
+    "Northern_Leaf_Blight": {
+        "name": "Northern Leaf Blight",
+        "agent": "Exserohilum turcicum",
+        "severity": "High · foliar necrosis",
+        "tier": "critical",
+        "chemical": "Propiconazole 25 EC @ 1 ml/L OR Mancozeb 75 WP @ 2.5 g/L.",
+    },
+    "Phosphorus_Deficiency": {
+        "name": "Phosphorus Deficiency",
+        "agent": "Macronutrient deficiency (P)",
+        "severity": "Nutritional stress",
+        "tier": "nutritional",
+        "chemical": "Foliar 12:61:0 @ 5 g/L OR Single Super Phosphate @ 100 kg/ha.",
+    },
+    "Potassium_Deficiency_in_Maize": {
+        "name": "Potassium Deficiency",
+        "agent": "Macronutrient deficiency (K)",
+        "severity": "Nutritional stress",
+        "tier": "nutritional",
+        "chemical": "MOP @ 40 kg/ha OR 13:0:45 foliar spray @ 10 g/L.",
+    },
+    "Rust_in_Maize": {
+        "name": "Common Rust",
+        "agent": "Puccinia sorghi",
+        "severity": "Moderate to high",
+        "tier": "moderate",
+        "chemical": "Tebuconazole 25.9 EC @ 1 ml/L OR Mancozeb 75 WP @ 2.5 g/L.",
+    },
+    "Stem_Borer": {
+        "name": "Stem Borer",
+        "agent": "Chilo partellus",
+        "severity": "Critical · dead heart",
+        "tier": "critical",
+        "chemical": "Carbofuran 3G @ 5 kg/ha in whorls OR Chlorantraniliprole 18.5 SC @ 0.4 ml/L.",
+    },
+    "Trips": {
+        "name": "Thrips",
+        "agent": "Frankliniella spp.",
+        "severity": "Moderate",
+        "tier": "moderate",
+        "chemical": "Thiamethoxam 25 WG @ 0.3 g/L OR Imidacloprid 17.8 SL @ 0.3 ml/L.",
+    },
+    "Zinc_Deficiency_in_Maize": {
+        "name": "Zinc Deficiency",
+        "agent": "Micronutrient deficiency (Zn)",
+        "severity": "Nutritional stress · white bud",
+        "tier": "nutritional",
+        "chemical": "0.5% ZnSO4 (5 g/L) + 0.25% lime spray.",
+    },
+}
+TIER_ORDER = {"critical": 0, "moderate": 1, "nutritional": 2, "healthy": 3}
+CONDITION_GROUPS = {
+    "Fungal disease": ("moderate", ["Charcoal Rot", "Grey Leaf Spot", "Maydis Leaf Blight", "Northern Leaf Blight", "Common Rust"]),
+    "Insect pests": ("critical", ["Fall Armyworm", "Stem Borer", "Thrips"]),
+    "Nutrient deficiencies": ("nutritional", ["Nitrogen", "Phosphorus", "Potassium", "Zinc"]),
+}
 
-# --- Google Sheets Authorization ---
+
+def pretty_name(raw: str) -> str:
+    return MAIZE_AGRONOMIC_PROTOCOLS.get(raw, {}).get("name", raw.replace("_", " "))
+
+
+# --- Integrations (fail quietly; the UI reports status) ---
+def _secret(*path):
+    try:
+        node = st.secrets
+        for key in path:
+            node = node[key]
+        return node
+    except Exception:
+        return None
+
+
+SHEETS_CONFIGURED = bool(_secret("gcp_service_account") and _secret("drive_config", "sheet_id"))
+IMGBB_KEY = _secret("IMGBB_API_KEY") or _secret("drive_config", "IMGBB_API_KEY")
+
+
 def get_google_sheet():
     try:
         creds_dict = dict(st.secrets["gcp_service_account"])
@@ -210,112 +155,30 @@ def get_google_sheet():
         gc_client = gspread.authorize(credentials)
         sheet_id = st.secrets["drive_config"]["sheet_id"]
         return gc_client.open_by_key(sheet_id).sheet1
-    except Exception as e:
-        st.error(f"❌ Google Sheets Connection Failed: {repr(e)}")
+    except Exception:
         return None
 
-# --- Resilient Cloud Storage (ImgBB) ---
+
 def upload_image_to_cloud(image_bytes, filename):
-    api_key = st.secrets.get("IMGBB_API_KEY")
-    if not api_key and "drive_config" in st.secrets:
-        api_key = st.secrets["drive_config"].get("IMGBB_API_KEY")
-
-    if not api_key:
-        return "API Key Missing"
-
+    if not IMGBB_KEY:
+        return "Not archived"
     try:
-        url = "https://api.imgbb.com/1/upload"
         payload = {
-            "key": api_key,
+            "key": IMGBB_KEY,
             "name": filename,
-            "image": base64.b64encode(image_bytes).decode("utf-8")
+            "image": base64.b64encode(image_bytes).decode("utf-8"),
         }
-        res = requests.post(url, data=payload, timeout=25)
+        res = requests.post("https://api.imgbb.com/1/upload", data=payload, timeout=25)
         data = res.json()
         if data.get("status") == 200:
             return data["data"]["url"]
-        return f"Upload Error: {data.get('error', {}).get('message', 'Failed')}"
+        return f"Upload error: {data.get('error', {}).get('message', 'failed')}"
     except Exception as e:
-        return f"Error: {e}"
+        return f"Upload error: {type(e).__name__}"
 
-# --- Agronomic Protocols ---
-MAIZE_AGRONOMIC_PROTOCOLS = {
-    "Charcoal_Rot": {
-        "agent": "Macrophomina phaseolina",
-        "severity": "High (Stalk Lodging)",
-        "badge": "badge-critical",
-        "chemical": "Carbendazim 50 WP (1 g/L) or Thiophanate-Methyl 70 WP (1 g/L)."
-    },
-    "Fall_Army_worm": {
-        "agent": "Spodoptera frugiperda",
-        "severity": "Critical (Whorl Defoliation)",
-        "badge": "badge-critical",
-        "chemical": "Chlorantraniliprole 18.5 SC @ 0.4 ml/L OR Emamectin Benzoate 5 SG @ 0.4 g/L."
-    },
-    "Grey_Leaf_Spot": {
-        "agent": "Cercospora zeae-maydis",
-        "severity": "Moderate to High",
-        "badge": "badge-warning",
-        "chemical": "Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L water."
-    },
-    "Maydis_Leaf_Blight": {
-        "agent": "Bipolaris maydis",
-        "severity": "Moderate",
-        "badge": "badge-warning",
-        "chemical": "Mancozeb 75 WP @ 2.5 g/L OR Azoxystrobin 23 SC @ 1 ml/L."
-    },
-    "Nitrogen_Deficiency_in_Maize": {
-        "agent": "Macronutrient Deficiency (N)",
-        "severity": "Nutritional Stress",
-        "badge": "badge-warning",
-        "chemical": "Top-dress Urea @ 40 kg/ha OR 2% foliar Urea spray."
-    },
-    "Northern_Leaf_Blight": {
-        "agent": "Exserohilum turcicum",
-        "severity": "High (Foliar Necrosis)",
-        "badge": "badge-critical",
-        "chemical": "Propiconazole 25 EC @ 1 ml/L OR Mancozeb 75 WP @ 2.5 g/L."
-    },
-    "Phosphorus_Deficiency": {
-        "agent": "Macronutrient Deficiency (P)",
-        "severity": "Nutritional Stress",
-        "badge": "badge-warning",
-        "chemical": "Foliar 12:61:0 @ 5 g/L OR Single Super Phosphate @ 100 kg/ha."
-    },
-    "Potassium_Deficiency_in_Maize": {
-        "agent": "Macronutrient Deficiency (K)",
-        "severity": "Nutritional Stress",
-        "badge": "badge-warning",
-        "chemical": "MOP @ 40 kg/ha OR 13:0:45 foliar spray @ 10 g/L."
-    },
-    "Rust_in_Maize": {
-        "agent": "Puccinia sorghi",
-        "severity": "Moderate to High",
-        "badge": "badge-warning",
-        "chemical": "Tebuconazole 25.9 EC @ 1 ml/L OR Mancozeb 75 WP @ 2.5 g/L."
-    },
-    "Stem_Borer": {
-        "agent": "Chilo partellus",
-        "severity": "Critical (Dead Heart)",
-        "badge": "badge-critical",
-        "chemical": "Carbofuran 3G @ 5 kg/ha in whorls OR Chlorantraniliprole 18.5 SC @ 0.4 ml/L."
-    },
-    "Trips": {
-        "agent": "Frankliniella spp.",
-        "severity": "Moderate",
-        "badge": "badge-warning",
-        "chemical": "Thiamethoxam 25 WG @ 0.3 g/L OR Imidacloprid 17.8 SL @ 0.3 ml/L."
-    },
-    "Zinc_Deficiency_in_Maize": {
-        "agent": "Micronutrient Deficiency (Zn)",
-        "severity": "White Bud",
-        "badge": "badge-warning",
-        "chemical": "0.5% ZnSO4 (5 g/L) + 0.25% lime spray."
-    }
-}
 
 # --- Cache Model Pipeline ---
-@st.cache_resource
+@st.cache_resource(show_spinner="Warming up the vision model. The first load takes about 30 seconds…")
 def load_vision_pipeline():
     clf = joblib.load("maize_vlm_classifier.joblib")
     scaler = joblib.load("maize_vlm_scaler.joblib")
@@ -323,187 +186,335 @@ def load_vision_pipeline():
     vision_id = "google/siglip-base-patch16-384"
     processor = AutoImageProcessor.from_pretrained(vision_id)
     vision_model = AutoModel.from_pretrained(
-        vision_id, torch_dtype=torch.float32, low_cpu_mem_usage=True
+        vision_id, dtype=torch.float32, low_cpu_mem_usage=True
     ).to(device)
     vision_model.eval()
     gc.collect()
     return clf, scaler, class_names, processor, vision_model
 
-clf, scaler, class_names, processor, vision_model = load_vision_pipeline()
 
-# --- Main Layout ---
-st.markdown("""
-<div class="hero-container">
-    <div class="hero-title">🌽 Maize Pathology Copilot <span style="font-size: 1rem; font-weight: 500; opacity: 0.85;">v2.4 Enterprise</span></div>
-    <div class="hero-subtitle">High-throughput Vision-Language Decision Support Platform for agronomists, crop scouts, and pathology laboratories. Real-time inference with SigLIP feature representations and cloud syncing.</div>
-    <div>
-        <span class="tag-pill">🌱 Zero-Shot Vision Encoder</span>
-        <span class="tag-pill">⚡ SigLIP Base 384px</span>
-        <span class="tag-pill">☁️ Live Sheets Sync</span>
-        <span class="tag-pill">🛡️ 12 Calibrated Pathologies</span>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+def diagnose(image, clf, scaler, class_names, processor, vision_model):
+    inputs = processor(images=[image], return_tensors="pt").to(device, dtype=torch.float32)
+    with torch.no_grad():
+        out = vision_model.vision_model(inputs["pixel_values"]).last_hidden_state
+        feat = torch.cat([out.mean(dim=1), out.max(dim=1).values], dim=-1)
+        feat = feat / feat.norm(dim=-1, keepdim=True)
+        feat_scaled = scaler.transform(feat.cpu().float().numpy())
 
-# Upload Area
-uploaded_files = st.file_uploader(
-    "Upload Maize Foliar Specimens (Batch processing enabled):",
-    type=["jpg", "jpeg", "png", "webp"],
-    accept_multiple_files=True,
-    help="Select one or multiple maize leaf images from field cameras or smartphones."
+    probs = clf.predict_proba(feat_scaled)[0]
+    top_idx = int(np.argmax(probs))
+    max_conf = float(probs[top_idx]) * 100
+    top3 = [(pretty_name(class_names[i]), float(probs[i]) * 100) for i in np.argsort(probs)[::-1][:3]]
+
+    if max_conf < HEALTHY_THRESHOLD:
+        return {
+            "title": "No disorder detected",
+            "severity": "Healthy · asymptomatic",
+            "tier": "healthy",
+            "agent": "None",
+            "rx": "Maintain standard fertigation and periodic foliar scouting.",
+            "conf": max_conf,
+            "top3": top3,
+        }
+
+    raw_class = class_names[top_idx]
+    meta = MAIZE_AGRONOMIC_PROTOCOLS.get(raw_class, {
+        "name": raw_class.replace("_", " "), "agent": "Unknown", "severity": "Check field",
+        "tier": "moderate", "chemical": "Consult the regional agricultural extension office.",
+    })
+    return {
+        "title": meta["name"],
+        "severity": meta["severity"],
+        "tier": meta["tier"],
+        "agent": meta["agent"],
+        "rx": meta["chemical"],
+        "conf": max_conf,
+        "top3": top3,
+    }
+
+
+# --- Session state ---
+ss = st.session_state
+ss.setdefault("uploader_key", 0)
+ss.setdefault("results", None)
+ss.setdefault("run_meta", None)
+ss.setdefault("scroll_to_results", False)
+
+
+def reset_batch():
+    ss.uploader_key += 1
+    ss.results = None
+    ss.run_meta = None
+
+
+# --- Sidebar ---
+with st.sidebar:
+    st.markdown(
+        ui.sidebar_about([
+            ("Training", "1,394 images"),
+            ("Validation", "398 · 98.99%"),
+            ("Holdout test", "200 · 100.0%"),
+            ("Classes", "12 conditions"),
+        ]),
+        unsafe_allow_html=True,
+    )
+
+# --- Header ---
+topbar_slot = st.empty()
+st.markdown(ui.hero(), unsafe_allow_html=True)
+st.markdown(
+    ui.stat_strip([
+        ("12", "maize conditions detected"),
+        ("98.99%", "validation accuracy"),
+        ("1,992", "curated field images"),
+        ("384px", "SigLIP vision encoder"),
+    ]),
+    unsafe_allow_html=True,
 )
 
-if uploaded_files:
-    col_run, col_info = st.columns([1, 2])
-    with col_run:
-        run_batch = st.button("⚡ Run Batch Diagnostics & Cloud Sync", type="primary", use_container_width=True)
-    with col_info:
-        st.write(f"📁 **{len(uploaded_files)} specimen(s) queued** | Field Plot: `{plot_id}` | Officer: `{field_agent}`")
+clf, scaler, class_names, processor, vision_model = load_vision_pipeline()
 
-    if run_batch:
-        sheet = get_google_sheet()
-        results_data = []
-        rows_for_sheet = []
-        
-        progress_bar = st.progress(0)
-        status_text = st.empty()
+# --- Workspace ---
+col_session, col_upload = st.columns([1, 1.65], gap="large")
 
+with col_session:
+    with st.container(border=True, key="cvcard_session"):
+        st.markdown(ui.section("01", "Session details", "Attached to every record in this batch."), unsafe_allow_html=True)
+        field_agent = st.text_input("Agronomist / field officer", value="Field Officer")
+        plot_id = st.text_input("Plot or farm identifier", value="Zone A · Block 4")
+        notes = st.text_area("Field notes", placeholder="e.g. High humidity after monsoon rain", height=88)
+
+        st.markdown('<div class="cv-divider"></div>', unsafe_allow_html=True)
+        st.markdown(ui.section("", "Integrations"), unsafe_allow_html=True)
+        sync_sheets = st.toggle("Log results to Google Sheets", value=SHEETS_CONFIGURED, disabled=not SHEETS_CONFIGURED)
+        if not SHEETS_CONFIGURED:
+            st.markdown('<div class="cv-integ-note">Not configured for this deployment</div>', unsafe_allow_html=True)
+        archive_imgs = st.toggle("Archive images to cloud storage", value=bool(IMGBB_KEY), disabled=not IMGBB_KEY)
+        if not IMGBB_KEY:
+            st.markdown('<div class="cv-integ-note">Not configured for this deployment</div>', unsafe_allow_html=True)
+
+with col_upload:
+    with st.container(border=True, key="cvcard_upload"):
+        st.markdown(ui.section("02", "Leaf specimens", "Clear, well-lit photos of a single leaf work best. JPG, PNG or WEBP."), unsafe_allow_html=True)
+        uploaded_files = st.file_uploader(
+            "Leaf images",
+            type=["jpg", "jpeg", "png", "webp"],
+            accept_multiple_files=True,
+            key=f"uploader_{ss.uploader_key}",
+            label_visibility="collapsed",
+        )
+
+        if uploaded_files:
+            n = len(uploaded_files)
+            shown = uploaded_files[:8]
+            cells = []
+            for f in shown:
+                try:
+                    cells.append(f"<div>{ui.thumb(Image.open(f).convert('RGB'), f.name)}</div>")
+                except Exception:
+                    cells.append(f'<div><div class="cv-thumb"></div><div class="cv-thumb-n">{ui.esc(f.name)}</div></div>')
+            more = f" · showing first {len(shown)}" if n > len(shown) else ""
+            st.markdown(
+                f'<div class="cv-queue-meta"><b>{n} specimen{"s" if n != 1 else ""}</b> ready for analysis{more}</div>'
+                f'<div class="cv-thumbs {"cv-thumbs-lg" if n <= 3 else ""}">{"".join(cells)}</div>',
+                unsafe_allow_html=True,
+            )
+            # Keyed container lets CSS pin the actions to the bottom of the card
+            with st.container(key="cvactions"):
+                b1, b2 = st.columns([2.4, 1])
+                with b1:
+                    run_batch = st.button(
+                        f"Analyse {n} specimen{'s' if n != 1 else ''}",
+                        type="primary", icon=":material/biotech:", width="stretch",
+                    )
+                with b2:
+                    st.button("Clear", icon=":material/close:", width="stretch", on_click=reset_batch)
+        else:
+            run_batch = False
+            st.markdown(
+                '<div class="cv-sec-d" style="margin:18px 0 0">The model recognises 12 conditions:</div>'
+                + ui.condition_groups(CONDITION_GROUPS),
+                unsafe_allow_html=True,
+            )
+
+# --- Run analysis ---
+if run_batch and uploaded_files:
+    results, rows_for_sheet = [], []
+    total = len(uploaded_files)
+    with st.status(f"Analysing {total} specimen{'s' if total != 1 else ''}…", expanded=True) as status:
+        progress = st.progress(0.0)
         for idx, file in enumerate(uploaded_files):
-            status_text.markdown(f"**Analyzing specimen {idx+1}/{len(uploaded_files)}:** `{file.name}`...")
+            st.write(f"**{idx + 1}/{total}** · `{file.name}`: extracting visual features and classifying")
             image_bytes = file.getvalue()
             image = Image.open(file).convert("RGB")
+            dx = diagnose(image, clf, scaler, class_names, processor, vision_model)
 
-            # Vision Feature Extraction
-            inputs = processor(images=[image], return_tensors="pt").to(device, dtype=torch.float32)
-            with torch.no_grad():
-                out = vision_model.vision_model(inputs["pixel_values"]).last_hidden_state
-                feat = torch.cat([out.mean(dim=1), out.max(dim=1).values], dim=-1)
-                feat = feat / feat.norm(dim=-1, keepdim=True)
-                feat_scaled = scaler.transform(feat.cpu().float().numpy())
+            cloud_url = "Not archived"
+            if archive_imgs:
+                st.write(f"Archiving `{file.name}`")
+                cloud_url = upload_image_to_cloud(image_bytes, file.name)
 
-            probs = clf.predict_proba(feat_scaled)[0]
-            top_idx = int(np.argmax(probs))
-            max_conf = float(probs[top_idx]) * 100
-
-            if max_conf < 60.0:
-                diagnosis_title = "Healthy Maize Specimen"
-                severity = "Healthy Crop / Asymptomatic"
-                pathogen = "None"
-                prescription = "Maintain standard fertigation and periodic foliar scouting."
-                badge = "badge-healthy"
-            else:
-                raw_class = class_names[top_idx]
-                diagnosis_title = raw_class.replace("_", " ")
-                diag_meta = MAIZE_AGRONOMIC_PROTOCOLS.get(raw_class, {
-                    "agent": "Unknown", "severity": "Check Field",
-                    "badge": "badge-warning", "chemical": "Consult regional agricultural extension."
-                })
-                severity = diag_meta["severity"]
-                pathogen = diag_meta["agent"]
-                prescription = diag_meta["chemical"]
-                badge = diag_meta["badge"]
-
-            # Cloud Storage Upload
             now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            cloud_url = upload_image_to_cloud(image_bytes, file.name)
-
-            # Row entry for Google Sheets
             rows_for_sheet.append([
-                now_str,
-                file.name,
-                cloud_url,
-                diagnosis_title,
-                f"{max_conf:.2f}%",
-                severity,
-                field_agent,
-                plot_id
+                now_str, file.name, cloud_url, dx["title"], f"{dx['conf']:.2f}%",
+                dx["severity"], field_agent, plot_id,
             ])
+            results.append({**dx, "file": file.name, "url": cloud_url, "image": image, "time": now_str})
+            progress.progress((idx + 1) / total)
 
-            results_data.append({
-                "Image Name": file.name,
-                "Diagnosis": diagnosis_title,
-                "Confidence": f"{max_conf:.2f}%",
-                "Raw Confidence": max_conf,
-                "Severity": severity,
-                "Causal Factor": pathogen,
-                "Recommended Prescription": prescription,
-                "Image URL": cloud_url,
-                "Badge": badge,
-                "PIL Image": image
-            })
+        synced, sync_note = 0, "Off"
+        if sync_sheets:
+            st.write("Logging records to Google Sheets")
+            sheet = get_google_sheet()
+            if sheet is None:
+                sync_note = "Unavailable"
+            else:
+                try:
+                    sheet.append_rows(rows_for_sheet)
+                    synced, sync_note = len(rows_for_sheet), "Synced"
+                except Exception:
+                    sync_note = "Failed"
+        status.update(label="Analysis complete", state="complete", expanded=False)
 
-            progress_bar.progress((idx + 1) / len(uploaded_files))
+    if sync_sheets and sync_note != "Synced":
+        st.toast("Google Sheets sync is unavailable. Results are kept in this session.", icon=":material/cloud_off:")
+    elif synced:
+        st.toast(f"{synced} record{'s' if synced != 1 else ''} logged to Google Sheets", icon=":material/check_circle:")
 
-        # Log into Google Sheets
-        if sheet and rows_for_sheet:
-            try:
-                sheet.append_rows(rows_for_sheet)
-                st.toast(f"✅ Successfully synced {len(rows_for_sheet)} diagnostic record(s) to Google Sheets!")
-            except Exception as e:
-                st.error(f"❌ Google Sheets append error: {e}")
+    results.sort(key=lambda r: (TIER_ORDER[r["tier"]], -r["conf"]))
+    ss.results = results
+    ss.run_meta = {
+        "synced": synced, "sync_note": sync_note, "sync_on": sync_sheets,
+        "officer": field_agent, "plot": plot_id, "notes": notes,
+        "time": datetime.datetime.now().strftime("%d %b %Y, %H:%M"),
+    }
+    ss.scroll_to_results = True
 
-        status_text.markdown("✅ **Batch Processing & Diagnostic Profiling Complete.**")
+# --- Results ---
+if ss.results:
+    results, meta = ss.results, ss.run_meta
+    n = len(results)
+    need_action = sum(1 for r in results if r["tier"] == "critical")
+    avg_conf = float(np.mean([r["conf"] for r in results]))
 
-        # --- High-Level Metric Tiles ---
-        avg_conf = np.mean([r["Raw Confidence"] for r in results_data])
-        crit_count = sum(1 for r in results_data if "Critical" in r["Severity"] or "High" in r["Severity"])
-
-        st.markdown("### 📈 Batch Summary Metrics")
-        m1, m2, m3, m4 = st.columns(4)
-        with m1:
-            st.markdown(f'<div class="metric-box"><div class="metric-value">{len(results_data)}</div><div class="metric-label">Specimens Analyzed</div></div>', unsafe_allow_html=True)
-        with m2:
-            st.markdown(f'<div class="metric-box"><div class="metric-value" style="color: #991b1b;">{crit_count}</div><div class="metric-label">High / Critical Cases</div></div>', unsafe_allow_html=True)
-        with m3:
-            st.markdown(f'<div class="metric-box"><div class="metric-value">{avg_conf:.1f}%</div><div class="metric-label">Mean Confidence</div></div>', unsafe_allow_html=True)
-        with m4:
-            st.markdown(f'<div class="metric-box"><div class="metric-value" style="color: #166534;">100%</div><div class="metric-label">Cloud Sync Rate</div></div>', unsafe_allow_html=True)
-
-        st.write("")
-        st.markdown("### 🔬 Detailed Pathological Evaluations")
-
-        # Side-by-side Visual Specimen Cards
-        for res in results_data:
-            with st.container():
-                st.markdown('<div class="specimen-card">', unsafe_allow_html=True)
-                c_img, c_diag = st.columns([1, 2.2])
-
-                with c_img:
-                    st.image(res["PIL Image"], use_container_width=True, caption=res["Image Name"])
-
-                with c_diag:
-                    st.markdown(f'<span class="{res["Badge"]}">{res["Severity"]}</span>', unsafe_allow_html=True)
-                    st.markdown(f'<h2 style="color: #0f3d2e; margin: 8px 0 4px 0; font-size: 1.5rem; font-weight: 700;">{res["Diagnosis"]}</h2>', unsafe_allow_html=True)
-                    
-                    st.markdown(f"**Confidence Rating:** `{res['Confidence']}`")
-                    st.progress(min(res["Raw Confidence"] / 100.0, 1.0))
-                    
-                    st.markdown(f"**Pathogen / Causal Agent:** *{res['Causal Factor']}*")
-                    
-                    st.markdown(f"""
-                    <div class="rx-box">
-                        <div class="rx-title">Recommended Agronomic Prescription</div>
-                        <p class="rx-content">{res['Recommended Prescription']}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    st.markdown(f'<div style="margin-top: 10px;"><a href="{res["Image URL"]}" target="_blank" class="cloud-link">🔗 View Cloud Specimen Record ({res["Image Name"]})</a></div>', unsafe_allow_html=True)
-
-                st.markdown('</div>', unsafe_allow_html=True)
-
-        # Tabular View & Download Button
-        st.markdown("---")
-        st.markdown("### 📋 Export & Audit")
-        
-        df_export = pd.DataFrame(results_data)[["Image Name", "Diagnosis", "Confidence", "Severity", "Causal Factor", "Recommended Prescription", "Image URL"]]
-        st.dataframe(df_export, use_container_width=True)
-
-        csv_bytes = df_export.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="📥 Download Complete Agronomic Report (CSV)",
-            data=csv_bytes,
-            file_name=f"maize_diagnostic_report_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-            mime="text/csv",
-            type="primary",
-            use_container_width=True
+    st.markdown('<div id="cv-results" style="height:40px;scroll-margin-top:8px"></div>', unsafe_allow_html=True)
+    if ss.scroll_to_results:
+        ss.scroll_to_results = False
+        ui.scroll_to("cv-results")
+    h1, h2 = st.columns([3, 1], vertical_alignment="bottom")
+    with h1:
+        st.markdown(
+            f'<div class="cv-eyebrow">03 · Diagnostic report</div>'
+            f'<div class="cv-h2">Batch results</div>'
+            f'<div class="cv-sub">{ui.esc(meta["plot"])} · {ui.esc(meta["officer"])} · {ui.esc(meta["time"])}</div>',
+            unsafe_allow_html=True,
         )
+    with h2:
+        st.button("New batch", icon=":material/restart_alt:", width="stretch", on_click=reset_batch)
+
+    k1, k2, k3, k4 = st.columns(4)
+    k1.markdown(ui.kpi("Specimens analysed", str(n), foot="Leaf images in this batch"), unsafe_allow_html=True)
+    k2.markdown(
+        ui.kpi("Need urgent action", str(need_action), foot="Critical or high severity", alert=need_action > 0),
+        unsafe_allow_html=True,
+    )
+    k3.markdown(ui.kpi("Mean confidence", f"{avg_conf:.1f}", suffix="%", foot="Average of top predictions"), unsafe_allow_html=True)
+    if meta["sync_on"]:
+        k4.markdown(ui.kpi("Logged to Sheets", str(meta["synced"]), suffix=f"/ {n}", foot=meta["sync_note"]), unsafe_allow_html=True)
+    else:
+        k4.markdown(ui.kpi("Logged to Sheets", "Off", foot="Sync disabled"), unsafe_allow_html=True)
+
+    st.markdown('<div style="height:18px"></div>', unsafe_allow_html=True)
+    tab_reports, tab_table, tab_export = st.tabs(["Specimen reports", "Summary table", "Export"])
+
+    with tab_reports:
+        for i, r in enumerate(results):
+            with st.container(border=True, key=f"cvcard_report_{i}"):
+                c_img, c_dx = st.columns([1, 1.75], gap="large")
+                with c_img:
+                    st.markdown(ui.photo(r["image"], r["file"]), unsafe_allow_html=True)
+                    st.markdown(f'<div class="cv-file">{ui.esc(r["file"])}</div>', unsafe_allow_html=True)
+                with c_dx:
+                    st.markdown(
+                        ui.diagnosis_head(r["tier"], r["severity"], r["title"], r["agent"])
+                        + ui.confidence_meter(r["conf"])
+                        + ui.differential(
+                            r["top3"],
+                            f"Closest matches (below {HEALTHY_THRESHOLD:.0f}% threshold)" if r["tier"] == "healthy"
+                            else "Differential diagnosis",
+                        )
+                        + ui.rx(r["rx"], healthy=r["tier"] == "healthy")
+                        + ui.archive_link(r["url"]),
+                        unsafe_allow_html=True,
+                    )
+
+    df_export = pd.DataFrame([{
+        "Image Name": r["file"],
+        "Diagnosis": r["title"],
+        "Confidence": f"{r['conf']:.2f}%",
+        "Severity": r["severity"],
+        "Causal Factor": r["agent"],
+        "Recommended Prescription": r["rx"],
+        "Image URL": r["url"],
+        "Plot": meta["plot"],
+        "Officer": meta["officer"],
+        "Timestamp": r["time"],
+    } for r in results])
+
+    with tab_table:
+        df_view = pd.DataFrame([{
+            "Specimen": r["file"],
+            "Diagnosis": r["title"],
+            "Severity": r["severity"],
+            "Confidence": round(r["conf"], 1),
+            "Causal agent": r["agent"],
+            "Treatment": r["rx"],
+            "Image": r["url"] if str(r["url"]).startswith("http") else None,
+        } for r in results])
+        st.dataframe(
+            df_view,
+            hide_index=True,
+            width="stretch",
+            column_config={
+                "Confidence": st.column_config.ProgressColumn("Confidence", min_value=0, max_value=100, format="%.1f%%"),
+                "Image": st.column_config.LinkColumn("Image", display_text="Open ↗"),
+                "Treatment": st.column_config.TextColumn("Treatment", width="large"),
+            },
+        )
+
+    with tab_export:
+        e1, e2 = st.columns([1.4, 1], gap="large")
+        with e1:
+            st.markdown(
+                '<div class="cv-h2" style="font-size:1.5rem">Download the agronomic report</div>'
+                '<div class="cv-sub">A CSV of every diagnosis in this batch, with severity, causal agent, '
+                'treatment protocol and session details. Opens in Excel or Google Sheets.</div>',
+                unsafe_allow_html=True,
+            )
+            st.download_button(
+                "Download report (CSV)",
+                data=df_export.to_csv(index=False).encode("utf-8"),
+                file_name=f"maize_diagnostic_report_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                type="primary",
+                icon=":material/download:",
+                on_click="ignore",
+            )
+        with e2:
+            sync_text = (
+                f"{meta['synced']} of {n} records logged to Google Sheets." if meta["sync_on"] and meta["synced"]
+                else "Google Sheets logging was unavailable for this batch." if meta["sync_on"]
+                else "Google Sheets logging is turned off for this batch."
+            )
+            notes_html = f'<div class="cv-kv"><span>Notes</span><span>{ui.esc(meta["notes"])}</span></div>' if meta["notes"] else ""
+            st.markdown(
+                f'<div class="cv-label">Batch details</div>'
+                f'<div class="cv-kv"><span>Plot</span><span>{ui.esc(meta["plot"])}</span></div>'
+                f'<div class="cv-kv"><span>Officer</span><span>{ui.esc(meta["officer"])}</span></div>'
+                f'<div class="cv-kv"><span>Specimens</span><span>{n}</span></div>'
+                f'{notes_html}'
+                f'<div class="cv-integ-note" style="margin:12px 0 0">{ui.esc(sync_text)}</div>',
+                unsafe_allow_html=True,
+            )
+
+st.markdown(ui.footer(), unsafe_allow_html=True)

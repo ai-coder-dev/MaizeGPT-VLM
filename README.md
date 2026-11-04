@@ -1,4 +1,4 @@
-# 🌽 Maize Pathology VLM Copilot (CeraVLM)
+# 🌽 MaizeGPT VLM: Maize Pathology Diagnostics
 
 > **A lightweight, edge-ready Hybrid Vision-Language Model (VLM) for real-time maize (*Zea mays*) pathology diagnosis and grounded agronomic advisory.**
 
