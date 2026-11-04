@@ -260,7 +260,7 @@ with st.sidebar:
     )
 
 # --- Header ---
-topbar_slot = st.empty()
+st.markdown(ui.topbar(), unsafe_allow_html=True)
 st.markdown(ui.hero(), unsafe_allow_html=True)
 st.markdown(
     ui.stat_strip([

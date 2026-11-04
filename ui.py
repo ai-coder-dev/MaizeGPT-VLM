@@ -43,6 +43,16 @@ def load_css() -> None:
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
+def topbar() -> str:
+    return f"""
+<div class="cv-topbar">
+  <div class="cv-brand">
+    <div class="cv-mark">{LEAF_SVG}</div>
+    <div class="cv-wordmark">MaizeGPT VLM<small>Maize pathology diagnostics</small></div>
+  </div>
+</div>"""
+
+
 def hero() -> str:
     return """
 <div class="cv-hero">

@@ -36,14 +36,14 @@ html, body, .stApp, [data-testid="stAppViewContainer"],
 
 .block-container {
   max-width: 1180px;
-  padding-top: 1.25rem !important;
+  padding-top: 4.5rem !important;
   padding-bottom: 4rem !important;
 }
 
 /* ---------- Hide Streamlit chrome ---------- */
 #MainMenu, footer, [data-testid="stDecoration"],
 [data-testid="stAppDeployButton"], [data-testid="stStatusWidget"] { display: none !important; }
-header[data-testid="stHeader"] { background: transparent !important; height: 2.5rem; }
+header[data-testid="stHeader"] { background: var(--paper) !important; }
 
 /* ---------- Top bar ---------- */
 .cv-topbar {
@@ -301,7 +301,7 @@ header[data-testid="stHeader"] { background: transparent !important; height: 2.5
 
 /* ---------- Responsive ---------- */
 @media (max-width: 760px) {
-  .block-container { padding-top: 2.75rem !important; }
+  .block-container { padding-top: 4.25rem !important; }
   .cv-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cv-stat:nth-child(3) { padding-left: 0; border-left: 0; }
   .cv-stat:nth-child(n+3) { border-top: 1px solid var(--line); }
