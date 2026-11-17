@@ -1,0 +1,6 @@
+-r ../requirements.txt
+remotezip
+imagehash
+pymupdf
+python-dotenv
+scipy

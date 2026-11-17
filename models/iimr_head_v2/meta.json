@@ -1,0 +1,163 @@
+{
+  "classes": [
+    "charcoal_rot",
+    "common_rust",
+    "common_smut",
+    "corn_earworm",
+    "downy_mildew",
+    "fall_armyworm",
+    "grey_leaf_spot",
+    "healthy",
+    "maize_aphid",
+    "maydis_leaf_blight",
+    "nitrogen_deficiency",
+    "phaeosphaeria_leaf_spot",
+    "phosphorus_deficiency",
+    "pink_stem_borer",
+    "potassium_deficiency",
+    "stem_borer",
+    "thrips",
+    "turcicum_leaf_blight",
+    "zinc_deficiency"
+  ],
+  "temperature": 1.7674935709353776,
+  "support": {
+    "charcoal_rot": 13,
+    "common_rust": 431,
+    "common_smut": 250,
+    "corn_earworm": 255,
+    "downy_mildew": 12,
+    "fall_armyworm": 307,
+    "grey_leaf_spot": 463,
+    "healthy": 450,
+    "maize_aphid": 43,
+    "maydis_leaf_blight": 19,
+    "nitrogen_deficiency": 12,
+    "phaeosphaeria_leaf_spot": 149,
+    "phosphorus_deficiency": 13,
+    "pink_stem_borer": 28,
+    "potassium_deficiency": 16,
+    "stem_borer": 31,
+    "thrips": 10,
+    "turcicum_leaf_blight": 158,
+    "zinc_deficiency": 14
+  },
+  "vision_id": "google/siglip-base-patch16-384",
+  "eval": {
+    "classes": [
+      "charcoal_rot",
+      "common_rust",
+      "common_smut",
+      "corn_earworm",
+      "downy_mildew",
+      "fall_armyworm",
+      "grey_leaf_spot",
+      "healthy",
+      "maize_aphid",
+      "maydis_leaf_blight",
+      "nitrogen_deficiency",
+      "phaeosphaeria_leaf_spot",
+      "phosphorus_deficiency",
+      "pink_stem_borer",
+      "potassium_deficiency",
+      "stem_borer",
+      "thrips",
+      "turcicum_leaf_blight",
+      "zinc_deficiency"
+    ],
+    "temperature": 1.7674935709353776,
+    "n_train": 2134,
+    "n_test": 540,
+    "per_class": {
+      "charcoal_rot": {
+        "n": 1,
+        "top1": 1.0,
+        "top3": 1.0
+      },
+      "common_rust": {
+        "n": 101,
+        "top1": 0.881,
+        "top3": 0.97
+      },
+      "common_smut": {
+        "n": 49,
+        "top1": 1.0,
+        "top3": 1.0
+      },
+      "corn_earworm": {
+        "n": 39,
+        "top1": 0.718,
+        "top3": 0.949
+      },
+      "downy_mildew": {
+        "n": 5,
+        "top1": 0.2,
+        "top3": 0.4
+      },
+      "fall_armyworm": {
+        "n": 46,
+        "top1": 0.935,
+        "top3": 1.0
+      },
+      "grey_leaf_spot": {
+        "n": 109,
+        "top1": 0.862,
+        "top3": 0.917
+      },
+      "healthy": {
+        "n": 115,
+        "top1": 0.922,
+        "top3": 0.991
+      },
+      "maize_aphid": {
+        "n": 6,
+        "top1": 0.833,
+        "top3": 0.833
+      },
+      "maydis_leaf_blight": {
+        "n": 3,
+        "top1": 0.0,
+        "top3": 0.667
+      },
+      "nitrogen_deficiency": {
+        "n": 1,
+        "top1": 0.0,
+        "top3": 0.0
+      },
+      "phaeosphaeria_leaf_spot": {
+        "n": 27,
+        "top1": 0.778,
+        "top3": 0.963
+      },
+      "pink_stem_borer": {
+        "n": 4,
+        "top1": 0.5,
+        "top3": 1.0
+      },
+      "stem_borer": {
+        "n": 5,
+        "top1": 0.2,
+        "top3": 0.6
+      },
+      "turcicum_leaf_blight": {
+        "n": 28,
+        "top1": 0.679,
+        "top3": 0.929
+      },
+      "zinc_deficiency": {
+        "n": 1,
+        "top1": 1.0,
+        "top3": 1.0
+      }
+    },
+    "per_source": {},
+    "top1": 0.852,
+    "top3": 0.952,
+    "sick_called_healthy": 11,
+    "baseline_old_head": {
+      "top1": 0.313,
+      "top3": 0.448,
+      "sick_called_healthy": 101
+    }
+  }
+}

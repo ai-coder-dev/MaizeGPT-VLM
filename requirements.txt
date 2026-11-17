@@ -14,3 +14,6 @@ pandas
 requests
 gspread
 google-auth
+sentencepiece
+protobuf
+openai>=1.40

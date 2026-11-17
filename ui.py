@@ -18,12 +18,14 @@ TIER_LABEL = {
     "moderate": "Moderate",
     "nutritional": "Nutritional",
     "healthy": "Healthy",
+    "review": "Needs review",
 }
 TIER_DOT = {
     "critical": "#B42318",
     "moderate": "#B54708",
     "nutritional": "#175CD3",
     "healthy": "#067647",
+    "review": "#475467",
 }
 
 LEAF_SVG = (
@@ -57,9 +59,10 @@ def hero() -> str:
     return """
 <div class="cv-hero">
   <div class="cv-eyebrow">Vision-language decision support</div>
-  <h1>Field-grade diagnosis for <em>maize</em> foliar disorders.</h1>
-  <p class="cv-lede">Upload leaf photographs from the field. MaizeGPT VLM identifies the most likely disease,
-  pest or nutrient deficiency, shows how sure it is, and returns a grounded treatment protocol in seconds.</p>
+  <h1>Field diagnosis for <em>maize</em> diseases, pests and deficiencies.</h1>
+  <p class="cv-lede">Upload photos of the affected leaf, stalk, cob or tassel. MaizeGPT VLM lists the most likely
+  causes from the ICAR-IIMR list of maize problems, says how sure it is, and gives ICAR-IIMR management advice only
+  when it is confident. Otherwise it tells you what to check in the field.</p>
 </div>"""
 
 
@@ -119,12 +122,48 @@ def badge(tier: str, text: str) -> str:
 
 
 def diagnosis_head(tier: str, severity: str, title: str, agent: str) -> str:
-    agent_html = (
-        f'<div class="cv-agent">Causal agent · <em>{esc(agent)}</em></div>'
-        if agent and agent != "None"
-        else '<div class="cv-agent">No pathogen or deficiency signature detected</div>'
-    )
-    return f'<div class="cv-dx">{esc(title)}</div>{agent_html}'
+    sub = f"Causal agent · <em>{esc(agent)}</em>" if agent and agent != "None" else esc(severity)
+    return f'<div class="cv-dx">{esc(title)}</div><div class="cv-agent">{sub}</div>'
+
+
+STATUS_COPY = {
+    "confident": ("ok", "Confident diagnosis", "Both checks agree. Follow the ICAR-IIMR management below."),
+    "likely": ("warn", "Likely cause: confirm before spraying",
+               "Check the signs below in the field, or ask your KVK, before using any chemical."),
+    "uncertain": ("info", "Not sure yet: take a clearer photo",
+                  "The photo does not show enough to decide. Possible causes are listed below."),
+    "retake": ("info", "Photo not usable", "This does not look like a clear photo of maize."),
+}
+
+
+def status_banner(status: str, problem_id: str = "") -> str:
+    if problem_id == "healthy" and status == "confident":
+        cls, title, text = "ok", "No problem visible", "Both checks agree the plant looks healthy. Keep scouting regularly."
+        return f'<div class="cv-status-banner {cls}"><b>{esc(title)}</b><span>{esc(text)}</span></div>'
+    cls, title, text = STATUS_COPY.get(status, STATUS_COPY["uncertain"])
+    return f'<div class="cv-status-banner {cls}"><b>{esc(title)}</b><span>{esc(text)}</span></div>'
+
+
+def signs_block(signs: str, visible) -> str:
+    seen = "".join(f"<li>{esc(s)}</li>" for s in (visible or [])[:4])
+    seen_html = f'<div class="cv-label">What the model sees</div><ul class="cv-list">{seen}</ul>' if seen else ""
+    key = f'<div class="cv-label">How ICAR-IIMR describes it</div><p class="cv-signs">{esc(signs)}</p>' if signs else ""
+    return f'<div class="cv-signs-block">{seen_html}{key}</div>'
+
+
+def advice_block(advice: dict, status: str) -> str:
+    healthy = status == "confident" and not advice.get("chemical") and not advice.get("steps")
+    steps = "".join(f"<li>{esc(s)}</li>" for s in advice.get("steps", []))
+    chem = "".join(f"<li>{esc(s)}</li>" for s in advice.get("chemical", []))
+    label = "What to do" if status != "confident" else "Recommended management"
+    body = f'<ul class="cv-list">{steps}</ul>' if steps else ""
+    if chem:
+        body += f'<div class="cv-label" style="margin-top:10px">Chemical control (ICAR-IIMR)</div><ul class="cv-list">{chem}</ul>'
+    sources = advice.get("source") or []
+    if sources:
+        body += f'<div class="cv-source">Source: {esc("; ".join(sources[:2]))}</div>'
+    cls = "cv-rx healthy" if healthy else "cv-rx"
+    return f'<div class="{cls}"><div class="cv-label">{label}</div>{body}</div>'
 
 
 def confidence_meter(conf: float) -> str:
@@ -165,11 +204,11 @@ def sidebar_about(splits) -> str:
     return f"""
 <div class="cv-side">
   <h3>About the model</h3>
-  <p>A two-stage hybrid pipeline built to run on modest cloud hardware without losing diagnostic precision.</p>
+  <p>A SigLIP image model checked by a second vision model, grounded in ICAR-IIMR publications.</p>
   <div class="cv-steps">
-    <div class="cv-step"><div class="cv-step-n">1</div><div><b>Vision encoder</b><span>Google SigLIP Base · patch16 · 384px, with mean + max spatial token pooling.</span></div></div>
-    <div class="cv-step"><div class="cv-step-n">2</div><div><b>Calibrated diagnostic head</b><span>Multi-class classifier with probability calibration across 12 conditions.</span></div></div>
-    <div class="cv-step"><div class="cv-step-n">3</div><div><b>Agronomic grounding</b><span>Maize-specific protocols map each diagnosis to a treatment.</span></div></div>
+    <div class="cv-step"><div class="cv-step-n">1</div><div><b>SigLIP classifier</b><span>Google SigLIP Base · 384px features with a calibrated head trained on agronomist, ICAR-IIMR and open field images.</span></div></div>
+    <div class="cv-step"><div class="cv-step-n">2</div><div><b>Second check</b><span>When unsure, or for stalk, cob and tassel photos, a vision model reviews the photo against the ICAR-IIMR list of maize problems.</span></div></div>
+    <div class="cv-step"><div class="cv-step-n">3</div><div><b>Safe advice</b><span>Spray advice only for confident diagnoses, using ICAR-IIMR recommendations; otherwise field checks and KVK referral.</span></div></div>
   </div>
   <div class="cv-label">Dataset</div>
   {kv}
@@ -219,4 +258,4 @@ def scroll_to(anchor_id: str) -> None:
 
 
 def footer() -> str:
-    return '<div class="cv-foot"><span>MaizeGPT VLM · Maize pathology diagnostics</span><span>SigLIP vision encoder · calibrated diagnostic head</span></div>'
+    return '<div class="cv-foot"><span>MaizeGPT VLM · Maize pathology diagnostics</span><span>SigLIP classifier + second-check vision model · advice from ICAR-IIMR publications</span></div>'

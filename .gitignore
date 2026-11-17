@@ -2,3 +2,11 @@
 __pycache__/
 .streamlit/secrets.toml
 .DS_Store
+data/
+features/
+evals/results/
+*.pyc
+.pytest_cache/
+.claude/
+.env
+*.log

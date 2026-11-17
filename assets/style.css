@@ -310,3 +310,15 @@ header[data-testid="stHeader"] { background: var(--paper) !important; }
   .cv-foot { flex-direction: column; gap: 6px; }
   .cv-dx { font-size: 1.7rem; }
 }
+
+/* --- v2: review tier, status banner, signs and advice --- */
+.cv-badge.review { color: #475467; background: #F2F4F7; border-color: #D0D5DD; }
+.cv-status-banner { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; margin: 10px 0 14px; border: 1px solid; font-size: 0.9rem; }
+.cv-status-banner b { font-weight: 650; }
+.cv-status-banner.ok { color: var(--ok); background: var(--ok-bg); border-color: var(--ok-bd); }
+.cv-status-banner.warn { color: var(--mod); background: var(--mod-bg); border-color: var(--mod-bd); }
+.cv-status-banner.info { color: #344054; background: #F2F4F7; border-color: #D0D5DD; }
+.cv-list { margin: 6px 0 0 18px; padding: 0; color: var(--ink-2); font-size: 0.92rem; line-height: 1.5; }
+.cv-signs { color: var(--ink-2); font-size: 0.92rem; line-height: 1.5; margin: 4px 0 10px; }
+.cv-signs-block { margin: 12px 0; }
+.cv-source { margin-top: 10px; font-size: 0.78rem; color: var(--muted); }

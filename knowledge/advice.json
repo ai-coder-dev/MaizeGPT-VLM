@@ -1,0 +1,1155 @@
+{
+  "maize_aphid": {
+    "causal_organism": "Rhopalosiphum maidis",
+    "cultural": [
+      "Mechanical removal of infested shoots.",
+      "Conserve predators such as mirid bug, lady birdbeetles, lacewing, wasp, dragonfly, spiders, robber fly, reduviid bug, praying mantis, fire ants, big eyed bugs, pentatomid bug, earwigs, ground beetles, rove beetles etc.",
+      "Deep summer ploughing followed by fallowing helps in exposing resting stage of pests.",
+      "Inter-cropping with legume reduces borer incidence; maize-soybean/Maize-Cowpea/ Maize-Green gram are some of the good examples.",
+      "Use of well decomposed farm yard manure (FYM) reduces termite attack.",
+      "Plant spacing 75 cm x 20 cm in Kharif and 60 cm x 20 cm in Rabi is recommended.",
+      "Balanced use of fertilizers (NPK 120:60:40) kg/ha and supplement of micronutrient are the some of the key cultural practices recommended."
+    ],
+    "biological": [
+      "Conservation of natural enemies such as coccinellids, chrysopids and syrphids that are found to feed on the aphids.",
+      "Chrysoperla carnea @ 5000 first instars grub/acre for two releases for 15 days to control maize aphids.",
+      "Chrysoperla carnea @ 5000 first instars grub/acre for two releases for 15 days to control maize aphids, Rhopalosiphum maidis"
+    ],
+    "chemical": [],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Conservation Agriculture in Maize Systems (2024), p. 20",
+      "ICAR-IIMR, Management of Fall Armyworm & Aflatoxin in Maize (2024), p. 20",
+      "ICAR-IIMR, Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 23",
+      "ICAR-IIMR, Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 82"
+    ],
+    "verified": false,
+    "blocked": [],
+    "rejected_entries": []
+  },
+  "turcicum_leaf_blight": {
+    "causal_organism": "Exserohilum turcicum",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: IMH 225, IMH 226, IMH 228, IMH 222, IMH 223, IMH 224.",
+      "Collect and remove any infected crop residue from the field.",
+      "Grow maize hybrids that are recommended for their resistance or tolerance to TLB.",
+      "Practice proper crop rotation with non-cereal crops.",
+      "IMH 227 hybrid is moderately resistant to Turcicum leaf blight.",
+      "IMH 221 has shown tolerance to Turcicum leaf blight.",
+      "DMRH 1305 is tolerant to Turcicum leaf blight.",
+      "DMRH 1308 is tolerant to Turcicum leaf blight."
+    ],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "Azoxystrobin 18.2% + Difenconazole 11.4% w/w SC",
+        "dose": "1ml/l of water",
+        "method": "Foliar spray",
+        "timing": "The first spray should be applied immediately after symptom appearance, followed by a second spray at 10-15 days interval.",
+        "source": "Maize Diseases and their Management (2024), p. 2"
+      },
+      {
+        "product": "Indofil M-45 (Mancozeb)",
+        "dose": "2.5 g/l of water",
+        "method": "Foliar spray",
+        "timing": "The first spray should be applied immediately after symptom appearance, followed by a second spray at 10-15 days interval.",
+        "source": "Maize Diseases and their Management (2024), p. 2"
+      },
+      {
+        "product": "Zineb",
+        "dose": "2.5-4.0 g/L water",
+        "method": "Spray",
+        "timing": "2-4 times at 8-10 days intervals",
+        "source": "Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 14"
+      },
+      {
+        "product": "Bavistin + Captan in 1:1 ratio",
+        "dose": "2.0 g kg-1 seed",
+        "method": "Seed treatment",
+        "timing": "before sowing",
+        "source": "Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 44"
+      },
+      {
+        "product": "copper fungicides",
+        "dose": "3 g/L",
+        "method": "spraying in the whorls of plant",
+        "timing": "twice a week for four weeks before silking for management of brown spot disease",
+        "source": "Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 122"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, ICAR-IIMR at a Glance (2024), p. 20",
+      "ICAR-IIMR, Maize Diseases and their Management (2024), p. 2",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 13",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 14"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Bavistin + Captan",
+      "Maneb 2.5-4.0 g/L water",
+      "एजोक्सीस्ट्रोबिन 25 एस.सी. 1.0 मिलीग्राम/प्रति लीटर पानी",
+      "जिनेब/ मानेब 2 ग्रा./ लीटर पानी",
+      "डाइफेनोकोनाजोल 25 ई.सी. 2.5 मिलीग्राम/लीटर पानी",
+      "मैन्कोजेब एक लीटर पानी में 2.5 से 4 ग्राम"
+    ],
+    "blocked": [
+      "benomyl, carbendazim and oxycarboxin"
+    ]
+  },
+  "maydis_leaf_blight": {
+    "causal_organism": "Bipolaris maydis",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: IMH 225, IMH 226, IMH 228, IMH 222, IMH 223, IMH 224, PMH 4.",
+      "Collect and remove any infected crop residue from the field.",
+      "Grow maize hybrids that are recommended for their resistance or tolerance to MLB.",
+      "IMH 227 hybrid is moderately resistant to Maydis leaf blight.",
+      "IMH 221 has shown tolerance to maydis leaf blight.",
+      "DMRH 1305 is tolerant to maydis leaf blight.",
+      "IMHB-1539 is tolerant to maydis leaf blight.",
+      "PMH1-LP: Moderate resistant (MR) to maydis leaf blight (MLB)."
+    ],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "Mancozeb 75 WP",
+        "dose": "2.5 g/litre water",
+        "method": "Foliar spray",
+        "timing": "45 days after sowing (DAS)",
+        "source": "ICAR-IIMR at a Glance (2024), p. 20"
+      },
+      {
+        "product": "Azoxystrobin 18.2% w/w + Difenoconazole 11.4% w/w SC",
+        "dose": "1 ml/l water",
+        "method": "Foliar spray",
+        "timing": "55 DAS",
+        "source": "ICAR-IIMR at a Glance (2024), p. 20"
+      },
+      {
+        "product": "Thiram",
+        "dose": "3 g/kg seed",
+        "method": "Seed treatment",
+        "timing": "",
+        "source": "ICAR-IIMR at a Glance (2024), p. 23"
+      },
+      {
+        "product": "Dithane Z-78",
+        "dose": "2.5-4 g/L water",
+        "method": "Spray",
+        "timing": "Repeat the spray at 8-10 days interval",
+        "source": "Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 14"
+      },
+      {
+        "product": "Zineb",
+        "dose": "2.5-4 g/L water",
+        "method": "Spray",
+        "timing": "Repeat the spray at 8-10 days interval",
+        "source": "Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 14"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, ICAR-IIMR at a Glance (2024), p. 20",
+      "ICAR-IIMR, ICAR-IIMR at a Glance (2024), p. 23",
+      "ICAR-IIMR, Maize Diseases and their Management (2024), p. 2",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 13"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Bavistin + Captan"
+    ],
+    "blocked": []
+  },
+  "banded_leaf_sheath_blight": {
+    "causal_organism": "Rhizoctonia solani f.sp. sasakii",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: PMH 4.",
+      "Soil amendment with Trichoderma harzianum formulation @ 6t/acre Farm yard manure.",
+      "Remove the lower 2-3 leaves in contact with the soil along with their sheaths. This practice reduces the chances of the pathogen spreading from infected plant debris to healthy plants.",
+      "Collect and remove any infected crop residue from the field.",
+      "Grow maize hybrids that are recommended for their resistance or tolerance to BLSB.",
+      "DMRH 1305 is tolerant to Banded leaf and sheath blight.",
+      "IMHB-1539 is tolerant to Banded leaf and sheath blight.",
+      "ISCH 601 showed moderate resistance (MR) to BLSB in the peninsular zone (PZ)."
+    ],
+    "biological": [
+      "Trichoderma harzianum formulation @ 6t/acre Farm yard manure",
+      "neem leaf extract @ 1% at 15 days after inoculation",
+      "Apply IDM module as soil amendment with Trichoderma harzianum formulation @ 6 t/acre Farm yard manure.",
+      "Seed treatment of peat based formulation (Pseudomonas fluorescence) @ 16 g/kg of seed.",
+      "Seed treatment with peat based formulation of Pseudomonas fluorescence @ 16 g/kg of seed or 2.5 kg /ha as soil application (Shekhar et al., 2011).",
+      "Seed treatment with peat based formulation (Pseudomonas fluorescence) @ 16 g/kg of seed or as soil application @ 7g/liter of water (soil drenching).",
+      "Seed treatment of peat based formulation @ 16 g/kg of Pseudomonas fluorescence or as soil application @ 7 g/L of water.",
+      "पीट आधारित स्टुडियोमोनास फ्लोरीसेंस संयोजन 16 ग्राम/कि. ग्राम. बीज की दर से बीज उपचार करना चाहिए।"
+    ],
+    "chemical": [
+      {
+        "product": "Salicylic acid",
+        "dose": "100 ppm",
+        "method": "Seed treatment",
+        "timing": "",
+        "source": "ICAR-IIMR at a Glance (2024), p. 20"
+      },
+      {
+        "product": "Azoxystrobin 18.2% w/w + Difenoconazole 11.4% w/w SC",
+        "dose": "0.1% (1ml/l) using 500 l water/ ha",
+        "method": "Foliar spray",
+        "timing": "at 3 Days after inoculation",
+        "source": "ICAR-IIMR at a Glance (2024), p. 20"
+      },
+      {
+        "product": "Bavistin + Captan in 1:1 ratio",
+        "dose": "2.0 g kg-1 seed",
+        "method": "Seed treatment",
+        "timing": "before sowing",
+        "source": "Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 44"
+      },
+      {
+        "product": "Sheethmar (Validamycin)",
+        "dose": "2.7 ml/l water",
+        "method": "foliar spray",
+        "timing": "",
+        "source": "Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 77"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, ICAR-IIMR at a Glance (2024), p. 20",
+      "ICAR-IIMR, Maize Diseases and their Management (2024), p. 2",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 21",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 28"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Rhizolex 50 WP @ 10 g/10 L of water",
+      "राइजोलेक्स 50 डब्ल्यू पी 10 ग्राम/10 लीटर पानी",
+      "राइजोलेक्स 50 डब्ल्यू. जी 10 ग्राम प्रति 10 लीटर पानी"
+    ],
+    "blocked": []
+  },
+  "fall_armyworm": {
+    "causal_organism": "Spodoptera frugiperda (J.E.Smith)",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: IMH 225, IMH 226, IMH 228, IMH 222, IMH 224.",
+      "Moderately resistance to Fall Armyworm",
+      "PMH1-LP showed similar resistance (R) reaction as that of original hybrid PMH 1 to Fall armyworm.",
+      "ISCH 601 showed resistance (R) reaction to FAW in NHZ and moderately resistant in northeastern plains zone (NEPZ).",
+      "ISCH 601 showed moderate resistence to fall armyworm across all zones of India basis.",
+      "Monitor the FAW population using pheromone traps; 4 traps are to be installed in any one acre of the first planted crop in a contiguous maize field.",
+      "Avoid staggered sowing of maize particularly sweet corn..",
+      "Installation of pheromone traps @8-10 per acre."
+    ],
+    "biological": [
+      "Release of Telenomus remus or Trichogramma pretiosum @ 50,000/ac at weekly intervals (soon after observation of egg masses in the field).",
+      "Whorl application of Metarhizium or Beauveria or Nomuraea @ 5 g/liter for control of early instars is recommended.",
+      "Whorl application of Neem formulation (Azadirachtin, 1500ppm) @ 5 ml /l or one lit/acre (to avoid egg laying and to kill the eggs / early instar larvae).",
+      "Biopesticides were distributed by ICAR-IIMR to AICRP Entomology Centres under Peninsular Zone for the management of FAW.",
+      "In situ protection of natural enemies, and erection of bird perches etc. are conservation biocontrol options.",
+      "Augmentative release of parasitoids and applications of microbial and botanical pesticide formulations.",
+      "Install pheromone traps @ 4/acre soon after sowing and monitor moth catches.",
+      "If monitoring indicates more than one moth/trap/day install pheromone traps @ 15/acre for mass trapping [Note: For success of mass trapping go for community action]."
+    ],
+    "chemical": [
+      {
+        "product": "Emamectin benzoate 5 SG",
+        "dose": "0.4.g/l",
+        "method": "",
+        "timing": "at initial stage of damage",
+        "source": "ICAR-IIMR at a Glance (2024), p. 21"
+      },
+      {
+        "product": "Spinetoram 11.7% w/w SC",
+        "dose": "0.5ml/l",
+        "method": "",
+        "timing": "at initial stage of damage",
+        "source": "ICAR-IIMR at a Glance (2024), p. 21"
+      },
+      {
+        "product": "Novaluran 5.25% + Emamectin benzoate 0.9% w/w SC",
+        "dose": "2ml/l",
+        "method": "",
+        "timing": "at initial stage of damage",
+        "source": "ICAR-IIMR at a Glance (2024), p. 21"
+      },
+      {
+        "product": "Flubendamide 480 SC",
+        "dose": "0.3ml/l",
+        "method": "",
+        "timing": "at initial stage of damage",
+        "source": "ICAR-IIMR at a Glance (2024), p. 21"
+      },
+      {
+        "product": "Chlorantraniliprole 18.5 SC",
+        "dose": "5 ml/kg sand",
+        "method": "Sand + insecticide",
+        "timing": "",
+        "source": "ICAR-IIMR at a Glance (2024), p. 21"
+      }
+    ],
+    "etl": "First spray after observation of one moth/trap/day or 5% FAW infestation on trap crop or main crop.",
+    "sources": [
+      "ICAR-IIMR, ICAR-IIMR at a Glance (2024), p. 21",
+      "ICAR-IIMR, ICAR-IIMR at a Glance (2024), p. 23",
+      "ICAR-IIMR, Insect Pests of Maize & their Management (2024), p. 2",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 13"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "AzaDachtin 1500 ppm 5 ml/liter water",
+      "Cyantraniliprole 19.8% +",
+      "Thiodicarb 75% WP",
+      "ZC 0.5ml/l",
+      "emamectin benzoate",
+      "insecticidal sprays",
+      "एज़ाडिराक्टिन 1500पीपीएम 5मिली/लीटर पानी",
+      "एजीडक्टिव 1500 पीपीएम @ 5 मिली / लीटर",
+      "क्लोथियनिडिन 18.5 एससीसी @ 0.4 मिली / लीटर पानी",
+      "क्लोथियनिडिन 2 सीसी / लीटर पानी",
+      "क्लोरेन्थानिलप्रोल 18.5 एससी 0.4 मिली/लीटर पानी",
+      "क्लोरेन्थेनिलप्रोल 18.5 एससी 0.4 मिली / लीटर पानी",
+      "डिपेल 8 एल @ 2 मिली / लीटर पानी",
+      "थायोफोस 75% WP 100 ग्राम; 2-3 लीटर पानी में 10 किलो चावल की भूसी और 2 किलो गुड़ मिलायें",
+      "थायोफोस 75% WP आधारित जहरी चारा",
+      "थियामेथोक्सम 12.6%+ लैम्बडा साईहेलोथिन 9.5% जेड सी @ 0.25 मिली / लीटर पानी",
+      "थियामेथोक्साम 12.6% + लैम्ब्डा साईहेलोथ्रिन 9.5% जेड सी 0.25 मिली/लीटर पानी",
+      "थियामेथोक्साम 12.6%+ लैम्बडा साइहेलोथ्रिन 9.5% जेड सी 0.25 मिली / लीटर पानी",
+      "स्पाइनटोरेम 11.7% एस सी 0.5 मिली / लीटर पानी",
+      "स्पाइनटोरेम 11.7% एस सी 0.5 मिली/लीटर पानी",
+      "स्पाइनोट्राम 11.7% एससी @ 0.5 मिली / लीटर पानी"
+    ],
+    "blocked": []
+  },
+  "pink_stem_borer": {
+    "causal_organism": "Sesamia inferens",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: IMH 225, IMH 226, IMH 222, IMH 223.",
+      "Collection and destruction of the stubbles.",
+      "Deep summer ploughing (not applicable to conservation agriculture).",
+      "Removal and destruction of dead hearts.",
+      "Removal of infested plants, ploughing the field soon after harvest and collection and burning of stubbles to kill the hibernating larvae and pupae.",
+      "Deep summer ploughing followed by fallowing helps in exposing resting stage of pests.",
+      "Inter-cropping with legume reduces borer incidence; maize-soybean/Maize-Cowpea/ Maize-Green gram are some of the good examples.",
+      "Use of well decomposed farm yard manure (FYM) reduces termite attack."
+    ],
+    "biological": [
+      "Use Trichocards (Trichogramma chilonis) on 15 days old crop @ 3 cards per acre"
+    ],
+    "chemical": [
+      {
+        "product": "chlorantraniliprole 18.5 SC",
+        "dose": "150ml/ha",
+        "method": "Spraying",
+        "timing": "when infestation crosses 10%, i.e. 10% of plants show visible leaf feeding damage towards stem of the plant.",
+        "source": "Insect Pests of Maize & their Management (2024), p. 2"
+      },
+      {
+        "product": "Quinalphos 0.05%",
+        "dose": "0.05%",
+        "method": "sprays",
+        "timing": "two sprays ... 15 days and 35 days after germination",
+        "source": "Rabi Maize – Opportunities and Challenges (2013), p. 20"
+      }
+    ],
+    "etl": "10%, i.e. 10% of plants show visible leaf feeding damage towards stem of the plant.",
+    "sources": [
+      "ICAR-IIMR, ICAR-IIMR at a Glance (2024), p. 21",
+      "ICAR-IIMR, Insect Pests of Maize & their Management (2024), p. 2",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 13",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 14"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Trichlorphon 5G or Cabofuran 3G @ 0.5 kg a.i/ha",
+      "कार्बारिल 2.5 ग्राम प्रति लीटर पानी",
+      "फोरेट 10 जी. 40 किग्रा. प्रति है."
+    ],
+    "blocked": [
+      "Carbofuran 3% G",
+      "Endosulfan (35 EC)",
+      "Endosulfan 35 EC",
+      "Endosulfan 35EC",
+      "carbaryl",
+      "endosulfan (35 EC)"
+    ]
+  },
+  "shoot_fly": {
+    "causal_organism": "Atherigona soccata Rondani; Atherigona naqvii Steyskal; Atherigona orientalis (Schiner)",
+    "cultural": [
+      "Sowing must be completed by first fortnight of February.",
+      "Removal and destruction of dead hearts prevents further spread of the insect.",
+      "Deep summer ploughing followed by fallowing helps in exposing resting stage of pests.",
+      "Inter-cropping with legume reduces borer incidence; maize-soybean/Maize-Cowpea/ Maize-Green gram are some of the good examples.",
+      "Use of well decomposed farm yard manure (FYM) reduces termite attack.",
+      "Plant spacing 75 cm x 20 cm in Kharif and 60 cm x 20 cm in Rabi is recommended.",
+      "Balanced use of fertilizers (NPK 120:60:40) kg/ha and supplement of micronutrient are the some of the key cultural practices recommended.",
+      "Crop rotation system, intercropping and mixed farming help conserve beneficial insects."
+    ],
+    "biological": [
+      "The page recommends attention to biological pest control methods in the region."
+    ],
+    "chemical": [
+      {
+        "product": "imidacloprid 600 FS",
+        "dose": "@ 6 ml/kg seed",
+        "method": "Seed treatment",
+        "timing": "Treated seed should be used with in 14 days of the treatment.",
+        "source": "Insect Pests of Maize & their Management (2024), p. 1"
+      },
+      {
+        "product": "Thiamethoxam 30 FS",
+        "dose": "@ 8.0 ml per kg seed",
+        "method": "Seed treatment",
+        "timing": "Treated seed should be used with in 14 days of the treatment.",
+        "source": "Insect Pests of Maize & their Management (2024), p. 1"
+      },
+      {
+        "product": "Dimethoate 30% EC",
+        "dose": "300 मि.ली. प्रति एकड़",
+        "method": "स्प्रे",
+        "timing": "",
+        "source": "मक्का: आलू अन्त – फसल उत्पादन तकनीक (2023), p. 4"
+      },
+      {
+        "product": "Fipronil",
+        "dose": "4 ml/kg",
+        "method": "",
+        "timing": "",
+        "source": "Baby Corn in India (2011), p. 12"
+      },
+      {
+        "product": "इमिडाक्लोप्रिड फिप्रोनील (Imidacloprid Fipronil)",
+        "dose": "4 ग्राम / किलो ग्राम बीज; 4 मिली लीटर / किलो ग्राम बीज (4 g/kg seed; 4 ml/liter seed)",
+        "method": "बीज उपचार",
+        "timing": "",
+        "source": "मध्य प्रदेश में मक्का/लोबिया/मक्का-लोबिया–आलू फसल चक्र में पोषक तत्व प्रबंधन (2021), p. 3"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Insect Pests of Maize & their Management (2024), p. 1",
+      "ICAR-IIMR, Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 15",
+      "ICAR-IIMR, मक्का में लगने वाले प्रमुख रोग एवं कीटों का प्राकृतिक तथा जैविक विधि से नियंत्रण (2024), p. 1"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Imidachlorpid 6.0 ml kg-1 seed",
+      "Imidachlorpit 4.0 g kg-1 seed",
+      "Methyl demeton 25% EC 400 मि.ली. प्रति एकड़",
+      "Thiomethoxam 30 FS 8ml/kg seed",
+      "gaucho 600FS 6.0 ml/ kg seed",
+      "फिप्रोनिल 4 मिलीलीटर/प्रति किलो ग्राम बीज"
+    ],
+    "blocked": [
+      "carbaryl",
+      "carbofuran",
+      "carbofuran 10 per cent",
+      "endosulfan (35 EC)"
+    ]
+  },
+  "stem_borer": {
+    "causal_organism": "Chilo partellus",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: IMH 225, IMH 226, IMH 222, IMH 224.",
+      "Destruction of the stubbles.",
+      "Deep summer ploughing (not applicable to conservation agriculture).",
+      "Planting of 2-3 rows of Napier grass as trap crop in field boundary.",
+      "Inter-crop maize with cowpea in 2:1 ratio.",
+      "Removal and destruction of dead hearts.",
+      "IMH 221 has shown tolerance to Chilo partellus insect in the AICRP as well as station trials of maize.",
+      "Moderately resistance to Chilo partellus"
+    ],
+    "biological": [
+      "Two releases of Trichogramma chilonis 8 cards/ha (1,50,000 parasitized eggs/ha) at 7 and 15 days after germination.",
+      "Release of egg parasitoid, Trichogramma chilonis @ 8 cards per ha twice i.e., at 12 and 22 days after germination.",
+      "Cotesia flavipes is the dominant and most widely distributed larval parasitoid.",
+      "Release of 8 trico cards (Trichogramma chilonis) per ha at 10 & 17days after germination.",
+      "Trichogramma egg parasite against eggs of maize stem borer.",
+      "Trichogramma, 50,000/ha - 6 releases Starting at 45 days",
+      "Use Trichocards (Trichogramma chilonis) on 15 days old crop @ 3 cards per acre",
+      "The page recommends attention to biological pest control methods in the region."
+    ],
+    "chemical": [
+      {
+        "product": "Chlorantraniliprole 18.5 SC",
+        "dose": "150ml/ha",
+        "method": "Spraying",
+        "timing": "immediately when infestation reaches 10% of plants, i.e. 10% of plants show visible leaf feeding damage.",
+        "source": "Insect Pests of Maize & their Management (2024), p. 2"
+      },
+      {
+        "product": "Dimethoate 30% EC",
+        "dose": "250 मि.ली. प्रति एकड़",
+        "method": "स्प्रे",
+        "timing": "",
+        "source": "मक्का: आलू अन्त – फसल उत्पादन तकनीक (2023), p. 4"
+      }
+    ],
+    "etl": "10% of plants, i.e. 10% of plants show visible leaf feeding damage.",
+    "sources": [
+      "ICAR-IIMR, Insect Pests of Maize & their Management (2024), p. 2",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 13",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 14",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 17"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Carboryl 500 gm in 500 litre water",
+      "Carboryl 750 gm in 700-800 litre water",
+      "Fort 106",
+      "chloropyrifos",
+      "copper oxy chloride",
+      "insecticides",
+      "recommended insecticides",
+      "इन्डोसुल्फान 2 मिली (35 ई.सी.) 2 मिली प्रति लीटर पानी",
+      "कार्बरिल (85% वेटेवल पाउडर) 2.5 ग्राम प्रति लीटर पानी"
+    ],
+    "blocked": [
+      "Carbaryl or Cypermethrin",
+      "Carbofuran 3% G",
+      "Carbofuran 3G",
+      "Endosulfan (35EC)",
+      "Endosulfan 35EC",
+      "carbaryl",
+      "endosulfan (35 EC)"
+    ]
+  },
+  "charcoal_rot": {
+    "causal_organism": "Macrophomina phaseolina",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: IMH 225, IMH 226, IMH 228, IMH 222, IMH 223, IMH 224.",
+      "Ploughing the field deeply during April and May, with 15-day intervals, helps to bury the infected plant debris.",
+      "Remove and burn the infected crop residues from the field",
+      "Avoid water stress especially during the flowering and grain filling stages.",
+      "Grow maize hybrids that are recommended for their resistance or tolerance to charcoal rot.",
+      "Crop rotation with non-host crops",
+      "IMH 227 hybrid is moderately resistant to Charcoal rot.",
+      "DMRH 1308 is tolerant to charcoal rot."
+    ],
+    "biological": [
+      "Seed treatment with Trichoderma harzianum @ 6 g/kg before sowing.",
+      "Seed treatment with 25g PSB (Pseudomonas striata H-21) and 6 g Trichoderma harzianum per kg seeds before sowing."
+    ],
+    "chemical": [
+      {
+        "product": "Thiram Flo 40 FS",
+        "dose": "5 ml/kg seeds",
+        "method": "Seed treatment",
+        "timing": "before sowing",
+        "source": "Maize Diseases and their Management (2024), p. 1"
+      },
+      {
+        "product": "Bavistin + Captan",
+        "dose": "in 1:1 ratio @ 2.0 g/kg seed",
+        "method": "Seed treatment",
+        "timing": "",
+        "source": "Maize Production for Food, Feed and Fodder (2019), p. 17"
+      },
+      {
+        "product": "Sheethmar (Validamycin)",
+        "dose": "@ 2.7 ml/litre water",
+        "method": "Spray",
+        "timing": "",
+        "source": "Maize Production for Food, Feed and Fodder (2019), p. 17"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Maize Diseases and their Management (2024), p. 1",
+      "ICAR-IIMR, Maize Diseases and their Management (2024), p. 2",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 13",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 14"
+    ],
+    "verified": false,
+    "blocked": [],
+    "rejected_entries": []
+  },
+  "fusarium_stalk_rot": {
+    "causal_organism": "Fusarium verticillioides",
+    "cultural": [
+      "Grow hybrids reported as resistant or moderately resistant: IMH 225, IMH 226, IMH 222, IMH 223, IMH 224.",
+      "Complete destruction of previous crop debris by deep ploughing during April and May at 15-day intervals.",
+      "Crop rotation with non-host crops.",
+      "Remove and burn the infected crop residues from the field.",
+      "Apply a balanced dose of fertilizers, with a low dose of nitrogen and a high dose of potassium.",
+      "If stalk rot is present in the field, harvesting the crop early can help minimize ear loss and reduce the spread of the disease.",
+      "Avoid water stress during the flowering stage by providing adequate irrigation.",
+      "Grow maize hybrids that are recommended for their resistance or tolerance to FSR."
+    ],
+    "biological": [
+      "Seed Treatment of 6 g tabuconazole +20 g Trichoderma chalk formulation + 100 g dung ash. Mix all with seed thoroughly in a plastic container or steel container by shaking it well.",
+      "FYM- 100 kg +2.5 Kg Trichoderma chalk powder and slightly wet + Incubate it for 15-20 days and after green growth of Trichoderma, mix it with 500 kg FYM + Vermicompost 100 kg + 10 Kg ash of dung. Apply at the time of seed sowing as prophylactic measure.",
+      "एक हेक्टेयर खेत के ट्राईकोडर्मा संबंधित गोबर खाद द्वारा भूमि उपचार हेतु 2 टन गोबर खाद में एक किलो ट्राईकोडर्मा फार्मुलेशन मिलाएं। नमी हेतु पानी छिड़कें तथा अच्छी तरह से मिलाकर खाद के ढेर को प्लास्टिक तिरपाल से ढक दें। 20-25 दिनों पश्चात् ट्राईकोडर्मा संबंधित गोबर खाद को खेत में बिखेरें।",
+      "ट्राईकोडर्मा फार्मुलेशन 8-10 ग्राम/किलो बीज की दर से बीजोपचार कर बुवाई करें।",
+      "बुवाई के 50 दिन पश्चात् मकका की कतारों में ट्राईकोडर्मा फार्मुलेशन 10 ग्राम/लीटर पानी में घोलकर मकका की कतारों में ड्रेनिंग करें।",
+      "बुवाई के समय 10 ग्राम/कि.ग्रा. एफ.वाई.एम. के साथ ट्रायकोडर्मा हार्जियानम फॉर्मूलेशन 2.0 प्रतिशत डब्लूपी का पंक्तियों में अनुप्रयोग करें।"
+    ],
+    "chemical": [
+      {
+        "product": "carbendazim",
+        "dose": "6 g carbendazim/kg seed",
+        "method": "Seed Treatment",
+        "timing": "",
+        "source": "Maize Diseases and their Management (2024), p. 1"
+      },
+      {
+        "product": "tabuconazole",
+        "dose": "6 g tabuconazole",
+        "method": "Seed Treatment; mix with Trichoderma chalk formulation and dung ash and mix all with seed thoroughly",
+        "timing": "",
+        "source": "Maize Diseases and their Management (2024), p. 1"
+      },
+      {
+        "product": "carbendazim 12% + mancozeb 62.7%",
+        "dose": "2 g/L",
+        "method": "Foliar Spray; thoroughly covering entire foliage",
+        "timing": "after 40 and 55 days after sowing or immediately after symptom appearance",
+        "source": "Maize Diseases and their Management (2024), p. 1"
+      },
+      {
+        "product": "Tabuconazole + Trichoderma chalk formulation + Dung ash",
+        "dose": "6 g Tabuconazole +20 g Trichoderma chalk formulation +100 g Dung ash",
+        "method": "Seed Treatment; Mix all with seed thoroughly in a plastic container or steel container by shaking it well",
+        "timing": "prophylactic measure",
+        "source": "Manual of Hybrid Seed Production Technology in Maize (2018), p. 47"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Maize Diseases and their Management (2024), p. 1",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 13",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 14",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 17"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "कार्बेन्डाजिम",
+      "कार्बेन्डाजिम 12% + मेन्कोजेब 63% 2 ग्राम/लीटर पानी"
+    ],
+    "blocked": []
+  },
+  "bacterial_stalk_rot": {
+    "causal_organism": "Dickeya zeae",
+    "cultural": [
+      "As soon as disease symptoms are noticed, remove and destroy the infected plants.",
+      "Maintaining adequate drainage is essential to prevent water logging and excessive soil moisture.",
+      "Growing of resistant or tolerant maize hybrids to bacterial stalk rot.",
+      "Practice crop rotation with non-host crops.",
+      "Wounds and injuries can provide entry points for the bacteria, increasing the likelihood of infection. Therefore, Proper handling and management practices should be followed to minimize mechanical injury to maize plants.",
+      "Deep ploughing",
+      "Crop rotation",
+      "Maintain proper moisture during ﬂowering"
+    ],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "bleaching powder (calcium hypochlorite)",
+        "dose": "1.5 grams per 15 liters of water",
+        "method": "Drenching around the stem",
+        "timing": "",
+        "source": "Maize Diseases and their Management (2024), p. 1"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Maize Diseases and their Management (2024), p. 1",
+      "ICAR-IIMR, Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 13",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 14"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "bleaching powder",
+      "ब्लिचिंग पाउडर (33 प्रतिशत) 10 किग्रा प्रति हेक्टेयर",
+      "ब्लिचिंग पाउडर 10 लीटर पानी में 3 ग्राम"
+    ],
+    "blocked": []
+  },
+  "common_rust": {
+    "causal_organism": "P. sorghi",
+    "cultural": [
+      "IMH 221 has shown tolerance to common rust.",
+      "Field sanitation",
+      "Destroy infected plants",
+      "Weed control",
+      "Maintain optimum plant stand",
+      "Planting before rainy season",
+      "Maintain low seed moisture (9%) at planting",
+      "Use early-maturing varieties or hybrids."
+    ],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "Dithane M-45",
+        "dose": "2.4-4 g/L water",
+        "method": "Spray",
+        "timing": "repeat the spray at 15 days interval",
+        "source": "Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2"
+      },
+      {
+        "product": "Mancozeb (Indofil M-45)",
+        "dose": "2.5-4 g/L of water",
+        "method": "Spray of fungicide",
+        "timing": "at first appearance of pustules. If disease is severe, three sprays at 10 days interval are recommended.",
+        "source": "Major Diseases of Maize and their Management (2018), p. 16"
+      },
+      {
+        "product": "Propiconozole 25% EC (Tilt)",
+        "dose": "1 ml/L of water",
+        "method": "Spraying",
+        "timing": "",
+        "source": "Major Diseases of Maize and their Management (2018), p. 16"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Maize Hybrids (2024), p. 20",
+      "ICAR-IIMR, Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 13",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 14"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Diathane M-45 2.4-4 g/litre water",
+      "Dithane M-45"
+    ],
+    "blocked": []
+  },
+  "curvularia_leaf_spot": {
+    "causal_organism": "Curvularia lunata (Wakker) Boedijn",
+    "cultural": [
+      "DMRH 1305 is tolerant to curvularia leaf spot.",
+      "ISCH 601 showed moderate resistance (MR) to CLS in the central-western zone (CWZ).",
+      "LPCH 2 showed moderate resistance under artificial epiphytotic conditions at hot spots.",
+      "LPCH 3 showed moderate resistance response under artificial epiphytotic conditions at hot spots.",
+      "Use the resistant cultivar/ hybrid available or recommended for their state/zone.",
+      "Remove the weeds in and around the field to make the crop safe from air borne infection.",
+      "Use resistant/tolerant hybrids and farmers are advised to choose particular resistant/tolerant hybrid for their location.",
+      "DMRH1305 is described as tolerant to curvularia leaf spot."
+    ],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "Carbendazim 12% + Mencozeb 62.7%",
+        "dose": "2 g/L water",
+        "method": "Spray",
+        "timing": "35 and 55 DAS",
+        "source": "Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2"
+      },
+      {
+        "product": "Zineb 75%",
+        "dose": "@ 2 g/liter",
+        "method": "spray",
+        "timing": "at 35 and 55 DAS",
+        "source": "Maize Production for Food, Feed and Fodder (2019), p. 17"
+      },
+      {
+        "product": "Trichoderma chalk formulation + Mancozeb 63% or Thiram 40 F.S.",
+        "dose": "20 g Trichoderma chalk formulation + Mancozeb 63% or Thiram 40 F.S. @ 6 g/kg seed",
+        "method": "Seed treatment",
+        "timing": "",
+        "source": "Manual of Hybrid Seed Production Technology in Maize (2018), p. 45"
+      },
+      {
+        "product": "Carbendazim 12%+ Mancozeb 62%",
+        "dose": "2 g/L of solution",
+        "method": "Foliar spray",
+        "timing": "at 35 and 55 DAS as prophylactic spray or immediately after disease appearance",
+        "source": "Manual of Hybrid Seed Production Technology in Maize (2018), p. 45"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Maize Hybrids (2024), p. 21",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 27",
+      "ICAR-IIMR, Maize Hybrids (2024), p. 41",
+      "ICAR-IIMR, Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2"
+    ],
+    "verified": false,
+    "blocked": [],
+    "rejected_entries": []
+  },
+  "ear_rot": {
+    "causal_organism": "Penicillium viridicatum, P. cyclopium and Aspergillus glaucus",
+    "cultural": [
+      "Grow resistant varieties.",
+      "Reduce insect damage to cob.",
+      "Proper aeration during storage.",
+      "Harvest maize immediately when it reaches maturity; protect the seed coat from damage and ensure maximum grain cleaning.",
+      "Begin harvesting when moisture reaches 28 to 30 percent and field-dried maize is 15 percent or less; dry immediately using mechanical means.",
+      "Keep moisture in stored grain below 12-13 percent and minimize insect activity.",
+      "Clean harvesting, handling and drying equipment and storage bins before harvesting; remove broken maize grains, dust, external materials and debris; inspect and repair bins to prevent moisture leakage.",
+      "Inspect stored grain every 3 to 4 weeks for insect activity, high temperature, mold growth or sprouting on the grain surface."
+    ],
+    "biological": [
+      "Inoculate antagonistic strains of Stenotrophomonas, Bacillus and Trichoderma before harvest; this significantly reduced Aspergillus flavus in crops.",
+      "Use non-toxic (antoxigenic) Aspergillus flavus isolates for pre-harvest biological control; they can compete with and displace toxigenic strains.",
+      "Utilization of biocontrol agents such as Bacillus subtilis, Lactobacillus spp., Pseudomonas spp. Ralstonia spp. and Burkholderia spp. are effective at control and management of aflatoxins (Palumbo et al., 2006)"
+    ],
+    "chemical": [],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Management of Fall Armyworm & Aflatoxin in Maize (2024), p. 1",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 29",
+      "ICAR-IIMR, एफ्लाटॉक्सिन–इसके हानिकारक प्रभाव और मक्का (2021), p. 1",
+      "ICAR-IIMR, एफ्लाटॉक्सिन–इसके हानिकारक प्रभाव और मक्का (2021), p. 2"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Carbendazim",
+      "Mancozeb",
+      "Propiconazole",
+      "approved insecticide"
+    ],
+    "blocked": []
+  },
+  "downy_mildew": {
+    "causal_organism": "Peronosclerospora sorghi Weston & Uppal Shaw",
+    "cultural": [
+      "Use the resistant cultivar/ hybrid available or recommended for their state/zone.",
+      "Rouging, destruction and burning of infected plants.",
+      "Use resistant/tolerant hybrids and farmers are advised to check particular resistant/tolerant hybrid for their location before sowing.",
+      "Adopt early planting; late kharif planting must be avoided.",
+      "Use resistant/tolerant hybrids and farmers are advised to choose particular resistant/tolerant hybrid for their location before sowing.",
+      "Use resistant/tolerant hybrids; farmers are advised to choose particular resistant/tolerant hybrid for their location before sowing.",
+      "The infected plants should be rogue out and destroyed.",
+      "The planting of crop before onset of rains minimizes the incidence of mildew."
+    ],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "Metalaxyl + Mancozeb",
+        "dose": "0.1%",
+        "method": "Foliar spray",
+        "timing": "",
+        "source": "Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2"
+      },
+      {
+        "product": "Metalaxyl (WS)",
+        "dose": "3.0 g/kg seeds",
+        "method": "Treat seeds",
+        "timing": "",
+        "source": "Major Diseases of Maize and their Management (2018), p. 19"
+      },
+      {
+        "product": "Amistar top",
+        "dose": "0.1%",
+        "method": "Foliar spray",
+        "timing": "Immediately after symptom appearance.",
+        "source": "Major Diseases of Maize and their Management (2018), p. 19"
+      },
+      {
+        "product": "Apron 35 WS",
+        "dose": "2.5 g/kg seed",
+        "method": "Seed treatment",
+        "timing": "",
+        "source": "Maize Production Technologies in India (2017), p. 15"
+      },
+      {
+        "product": "metalaxyl (Ridomil 25 WP, Apron 35 SD)",
+        "dose": "@ 2.5g/kg seed",
+        "method": "Seed treatment",
+        "timing": "",
+        "source": "Maize Production System (2010), p. 62"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Speciality Maize Cultivation Practices for Livelihood Security (2024), p. 2",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 13",
+      "ICAR-IIMR, Specialty Maize Cultivation Practices for Livelihood Security (2024), p. 14",
+      "ICAR-IIMR, मक्का में लगने वाले प्रमुख रोग एवं कीटों का प्राकृतिक तथा जैविक विधि से नियंत्रण (2024), p. 2"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Apran 35 SD 4g/kg seed",
+      "Carbendazim",
+      "Fungicides",
+      "Mancozeb",
+      "Matalaxyl 2.5 g kg-1 seed",
+      "Propiconazole",
+      "एपगेन 35 एस.डी. 2.5 ग्राम/किलो ग्राम बीज",
+      "मेटालाक्सिल",
+      "रिडोमिल 25 डब्ल्यू. पी."
+    ],
+    "blocked": []
+  },
+  "zinc_deficiency": {
+    "causal_organism": "",
+    "cultural": [],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "ZnSO4.7H2O",
+        "dose": "10 kg/acre",
+        "method": "should be applied",
+        "timing": "at sowing",
+        "source": "Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 90"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, मक्का की फसल के पोषण में जिंक का महत्व (2024), p. 1",
+      "ICAR-IIMR, Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 90",
+      "ICAR-IIMR, Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 96",
+      "ICAR-IIMR, कम समय में अधिक लाभ के लिए करें बेबी कॉर्न की खेती (2020), p. 2"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "जिंक सल्फेट और यूरिया 500 ग्राम जिंक सल्फेट और 2 किग्रा. यूरिया को 100 लीटर पानी में घोलकर"
+    ],
+    "blocked": []
+  },
+  "armyworm_cutworm": {
+    "causal_organism": "Mythimna separata",
+    "cultural": [
+      "scarecrow",
+      "metal traps",
+      "pheromone traps",
+      "Deep summer ploughing followed by fallowing helps in exposing resting stage of pests.",
+      "Inter-cropping with legume reduces borer incidence; maize-soybean/Maize-Cowpea/ Maize-Green gram are some of the good examples.",
+      "Use of well decomposed farm yard manure (FYM) reduces termite attack.",
+      "Plant spacing 75 cm x 20 cm in Kharif and 60 cm x 20 cm in Rabi is recommended.",
+      "Balanced use of fertilizers (NPK 120:60:40) kg/ha and supplement of micronutrient are the some of the key cultural practices recommended."
+    ],
+    "biological": [
+      "neem oil spray"
+    ],
+    "chemical": [],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, मक्का में लगने वाले प्रमुख रोग एवं कीटों का प्राकृतिक तथा जैविक विधि से नियंत्रण (2024), p. 1",
+      "ICAR-IIMR, Success Story of Promotion of Improved Technology of Maize Production in NEH Region (2021), p. 90",
+      "ICAR-IIMR, Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 82",
+      "ICAR-IIMR, Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 143"
+    ],
+    "verified": false,
+    "blocked": [],
+    "rejected_entries": []
+  },
+  "grey_leaf_spot": {
+    "causal_organism": "",
+    "cultural": [],
+    "biological": [],
+    "chemical": [],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, बदलती जलवायु के नकारात्मक प्रभाव के प्रति मक्का की प्रतिरोधक क्षमता बढ़ाने में जंगली प्रजातियों का उपयोग (2023), p. 3"
+    ],
+    "verified": false,
+    "blocked": [],
+    "rejected_entries": []
+  },
+  "viral_disease": {
+    "causal_organism": "Maize chlorotic mottle virus",
+    "cultural": [
+      "Use resistant varieties.",
+      "Adopt cultural practices."
+    ],
+    "biological": [],
+    "chemical": [],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, बदलती जलवायु के नकारात्मक प्रभाव के प्रति मक्का की प्रतिरोधक क्षमता बढ़ाने में जंगली प्रजातियों का उपयोग (2023), p. 3",
+      "ICAR-IIMR, मक्का (2017), p. 5",
+      "ICAR-IIMR, मक्का (2017), p. 17"
+    ],
+    "verified": false,
+    "blocked": [],
+    "rejected_entries": []
+  },
+  "pythium_stalk_rot": {
+    "causal_organism": "Pythium",
+    "cultural": [
+      "Use of disease-resistant hybrids, crop rotation, tillage, and balanced fertility, insect and weed control.",
+      "Plant good quality healthy and injury free seed for high germination.",
+      "Proper seed bed preparation, planting seed in warm, fairly moist soil (above 15.80C).",
+      "Correct placement of fertilizer, herbicide and other pesticides.",
+      "Regulate planting time between 10 and 20th July in North India.",
+      "Plant population not to exceed 50,000/ha in endemic areas.",
+      "Good field drainage to avoid water logging that helps in zoospore dispersal.",
+      "Removal of previous crop debris."
+    ],
+    "biological": [
+      "Enrich the soil with biocontrol agents impregnated composts for good development of antagonists against the soil borne pathogens.",
+      "Solarization, fumigation and soil drenches with bioagents and fungicides to mitigate the soil inoculum."
+    ],
+    "chemical": [
+      {
+        "product": "Captan",
+        "dose": "1 ग्राम प्रति लीटर पानी",
+        "method": "गांठों के साथ डालें",
+        "timing": "",
+        "source": "मक्का: आलू अन्त – फसल उत्पादन तकनीक (2023), p. 4"
+      },
+      {
+        "product": "Thiram/Captan",
+        "dose": "@ 2 g/kg seed",
+        "method": "Fungicides seed treatment",
+        "timing": "",
+        "source": "Maize Production System (2010), p. 59"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, मक्का: आलू अन्त – फसल उत्पादन तकनीक (2023), p. 4",
+      "ICAR-IIMR, मध्य प्रदेश में मक्का/लोबिया/मक्का-लोबिया–आलू फसल चक्र में पोषक तत्व प्रबंधन (2021), p. 3",
+      "ICAR-IIMR, Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 44",
+      "ICAR-IIMR, Maize Production for Food, Feed and Fodder (2019), p. 11"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Captain 2.5 ग्राम प्रति किलोग्राम बीज"
+    ],
+    "blocked": []
+  },
+  "termite": {
+    "causal_organism": "",
+    "cultural": [],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "Imidacloprid",
+        "dose": "4.0 g kg-1 seed",
+        "method": "Seed treatment",
+        "timing": "before sowing",
+        "source": "Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 44"
+      },
+      {
+        "product": "Fipronil",
+        "dose": "4ml/Kg seed",
+        "method": "seed treatment",
+        "timing": "before sowing",
+        "source": "Maize Production for Food, Feed and Fodder (2019), p. 11"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, मध्य प्रदेश में मक्का/लोबिया/मक्का-लोबिया–आलू फसल चक्र में पोषक तत्व प्रबंधन (2021), p. 5",
+      "ICAR-IIMR, Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 44",
+      "ICAR-IIMR, बिहार में एकल संकर मक्का बीज उत्पादन की संभावनाऐं एवं समस्याऐं (2020), p. 5",
+      "ICAR-IIMR, Maize Production for Food, Feed and Fodder (2019), p. 11"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Chlorpyriphos",
+      "Imidachlorpid (Gaucho) 6 ml/kg",
+      "Imidachlorpid 6.0 ml kg-1 seed",
+      "Imidachlorpit 4.0 g kg-1 seed",
+      "cruiser 70 WS",
+      "imidachlopid",
+      "क्लोरपायरीफोस चूर्ण 25 किलो ग्राम प्रति हेक्टेयर",
+      "क्लोरोपाइरीफास",
+      "फिप्रोनील के दाने"
+    ],
+    "blocked": []
+  },
+  "corn_earworm": {
+    "causal_organism": "Helicoverpa armigera",
+    "cultural": [
+      "Hand picking and destruction of larvae.",
+      "Installation of pheromone traps @ 10/ ha for monitoring purpose.",
+      "Deep summer ploughing followed by fallowing helps in exposing resting stage of pests.",
+      "Inter-cropping with legume reduces borer incidence; maize-soybean/Maize-Cowpea/ Maize-Green gram are some of the good examples.",
+      "Use of well decomposed farm yard manure (FYM) reduces termite attack.",
+      "Plant spacing 75 cm x 20 cm in Kharif and 60 cm x 20 cm in Rabi is recommended.",
+      "Balanced use of fertilizers (NPK 120:60:40) kg/ha and supplement of micronutrient are the some of the key cultural practices recommended.",
+      "Cultivate sweet corn hybrids with husks well covering the ear-tip."
+    ],
+    "biological": [
+      "Release of Trichogramma chilonis @ 8 cards/ha.",
+      "Natural enemies present in maize ecosystem will control Helicoverpa population (Trichogramma, Braconids and Tachinids).",
+      "Spraying of HNPV @ 500 LE/ha",
+      "Chrysoperla: 50,000 ha-1 twice during the season with a gap of 15 days.",
+      "Ha NPV is used for controlling H. armigera attacking maize; field application dosage is not specified.",
+      "Release 1-3 days old larvae on plants along with dust or dropped from the corrugated paper strips; paper strip with stalked Chrysoperla eggs stapled on the lower surface of leaf.",
+      "50,000 ha-1 twice during the season with a gap of 15 days.",
+      "For Ha NPV production, the diet used for rearing H.armigera is poured at 4gm/ cell and the diet surface is uniformly sprayed with virus prepared in distilled sterilized water at 18x106 POBs/ml. 80 percent of the available 5-7 day old larvae are utilized for Ha NPV production; trays are incubated at 260C for 7 days, and diseased/dead larvae are harvested after 7 days and macerated in distilled/ sterilized water."
+    ],
+    "chemical": [
+      {
+        "product": "Neem based products",
+        "dose": "@ 5 ml/l",
+        "method": "Spraying with boom sprayer",
+        "timing": "at cob formation stage",
+        "source": "Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 28"
+      },
+      {
+        "product": "Spinosad (45 SC)",
+        "dose": "@ 0.3 ml/l of water",
+        "method": "Spraying with boom sprayer",
+        "timing": "at cob formation stage",
+        "source": "Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 28"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 21",
+      "ICAR-IIMR, Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 27",
+      "ICAR-IIMR, Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 28",
+      "ICAR-IIMR, Integrated Management Strategies for Major Crop Pests and Diseases in Developing Countries (2020), p. 82"
+    ],
+    "verified": false,
+    "rejected_entries": [
+      "Bt. formulations (Dipel) @ 2 g/l of water"
+    ],
+    "blocked": []
+  },
+  "polysora_rust": {
+    "causal_organism": "Puccinia polysora Underw",
+    "cultural": [
+      "Use the resistant cultivar/ hybrid available or recommended for their state/zone.",
+      "Late planting must be avoided.",
+      "Use crop rotation with non-cereal crops.",
+      "Destruction of crop debris.",
+      "Use resistant/tolerant hybrids and farmers are advised to check particular resistant/tolerant hybrid for their location.",
+      "It is always advisable to use resistant varieties.",
+      "Residue management through sanitation, tillage and crop rotation.",
+      "Ploughing down of crop debris may reduce early infection."
+    ],
+    "biological": [],
+    "chemical": [
+      {
+        "product": "Mancozeb",
+        "dose": "2-3g/L of water",
+        "method": "sprays",
+        "timing": "Two sprays at 15 days interval immediately after symptoms (pustules) appearance.",
+        "source": "Manual of Hybrid Seed Production Technology in Maize (2018), p. 49"
+      },
+      {
+        "product": "Dithane M-45",
+        "dose": "2-2.5 gm/liter",
+        "method": "sprays",
+        "timing": "three sprays beginning from first appearance of symptoms at 15 days interval",
+        "source": "Maize Production Technologies in India (2017), p. 13"
+      }
+    ],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 112",
+      "ICAR-IIMR, Maize Production Technology and Management Strategies for Fall Armyworm (2020), p. 114",
+      "ICAR-IIMR, Major Diseases of Maize and their Management (2018), p. 6",
+      "ICAR-IIMR, Major Diseases of Maize and their Management (2018), p. 8"
+    ],
+    "verified": false,
+    "blocked": [],
+    "rejected_entries": []
+  },
+  "thrips": {
+    "causal_organism": "",
+    "cultural": [],
+    "biological": [],
+    "chemical": [],
+    "etl": "",
+    "sources": [
+      "ICAR-IIMR, Guidelines for Testing Maize Cultivars (2015), p. 17",
+      "ICAR-IIMR, Maize Production System (2010), p. 50"
+    ],
+    "verified": false,
+    "blocked": [
+      "carbofuran",
+      "carbofuran 10 per cent"
+    ],
+    "rejected_entries": []
+  }
+}

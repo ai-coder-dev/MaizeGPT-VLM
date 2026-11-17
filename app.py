@@ -1,19 +1,17 @@
 import base64
 import datetime
-import gc
+import json
+import os
 
 import gspread
-import joblib
 import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
-import torch
 from google.oauth2 import service_account
 from PIL import Image
-from transformers import AutoImageProcessor, AutoModel
-
 import ui
+from vlm_pipeline import HEAD_DIR, MaizeDiagnoser, advice_text, load_problems
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -24,108 +22,24 @@ st.set_page_config(
 )
 ui.load_css()
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-HEALTHY_THRESHOLD = 60.0
 
-# --- Agronomic Protocols ---
-# tier drives badge colour and ordering: critical > moderate > nutritional > healthy
-MAIZE_AGRONOMIC_PROTOCOLS = {
-    "Charcoal_Rot": {
-        "name": "Charcoal Rot",
-        "agent": "Macrophomina phaseolina",
-        "severity": "High · stalk lodging",
-        "tier": "critical",
-        "chemical": "Carbendazim 50 WP (1 g/L) or Thiophanate-Methyl 70 WP (1 g/L).",
-    },
-    "Fall_Army_worm": {
-        "name": "Fall Armyworm",
-        "agent": "Spodoptera frugiperda",
-        "severity": "Critical · whorl defoliation",
-        "tier": "critical",
-        "chemical": "Chlorantraniliprole 18.5 SC @ 0.4 ml/L OR Emamectin Benzoate 5 SG @ 0.4 g/L.",
-    },
-    "Grey_Leaf_Spot": {
-        "name": "Grey Leaf Spot",
-        "agent": "Cercospora zeae-maydis",
-        "severity": "Moderate to high",
-        "tier": "moderate",
-        "chemical": "Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L water.",
-    },
-    "Maydis_Leaf_Blight": {
-        "name": "Maydis Leaf Blight",
-        "agent": "Bipolaris maydis",
-        "severity": "Moderate",
-        "tier": "moderate",
-        "chemical": "Mancozeb 75 WP @ 2.5 g/L OR Azoxystrobin 23 SC @ 1 ml/L.",
-    },
-    "Nitrogen_Deficiency_in_Maize": {
-        "name": "Nitrogen Deficiency",
-        "agent": "Macronutrient deficiency (N)",
-        "severity": "Nutritional stress",
-        "tier": "nutritional",
-        "chemical": "Top-dress Urea @ 40 kg/ha OR 2% foliar Urea spray.",
-    },
-    "Northern_Leaf_Blight": {
-        "name": "Northern Leaf Blight",
-        "agent": "Exserohilum turcicum",
-        "severity": "High · foliar necrosis",
-        "tier": "critical",
-        "chemical": "Propiconazole 25 EC @ 1 ml/L OR Mancozeb 75 WP @ 2.5 g/L.",
-    },
-    "Phosphorus_Deficiency": {
-        "name": "Phosphorus Deficiency",
-        "agent": "Macronutrient deficiency (P)",
-        "severity": "Nutritional stress",
-        "tier": "nutritional",
-        "chemical": "Foliar 12:61:0 @ 5 g/L OR Single Super Phosphate @ 100 kg/ha.",
-    },
-    "Potassium_Deficiency_in_Maize": {
-        "name": "Potassium Deficiency",
-        "agent": "Macronutrient deficiency (K)",
-        "severity": "Nutritional stress",
-        "tier": "nutritional",
-        "chemical": "MOP @ 40 kg/ha OR 13:0:45 foliar spray @ 10 g/L.",
-    },
-    "Rust_in_Maize": {
-        "name": "Common Rust",
-        "agent": "Puccinia sorghi",
-        "severity": "Moderate to high",
-        "tier": "moderate",
-        "chemical": "Tebuconazole 25.9 EC @ 1 ml/L OR Mancozeb 75 WP @ 2.5 g/L.",
-    },
-    "Stem_Borer": {
-        "name": "Stem Borer",
-        "agent": "Chilo partellus",
-        "severity": "Critical · dead heart",
-        "tier": "critical",
-        "chemical": "Carbofuran 3G @ 5 kg/ha in whorls OR Chlorantraniliprole 18.5 SC @ 0.4 ml/L.",
-    },
-    "Trips": {
-        "name": "Thrips",
-        "agent": "Frankliniella spp.",
-        "severity": "Moderate",
-        "tier": "moderate",
-        "chemical": "Thiamethoxam 25 WG @ 0.3 g/L OR Imidacloprid 17.8 SL @ 0.3 ml/L.",
-    },
-    "Zinc_Deficiency_in_Maize": {
-        "name": "Zinc Deficiency",
-        "agent": "Micronutrient deficiency (Zn)",
-        "severity": "Nutritional stress · white bud",
-        "tier": "nutritional",
-        "chemical": "0.5% ZnSO4 (5 g/L) + 0.25% lime spray.",
-    },
+# tier drives badge colour and ordering: critical > moderate > nutritional > review > healthy
+TIER_ORDER = {"critical": 0, "moderate": 1, "nutritional": 2, "review": 3, "healthy": 4}
+STATUS_LABEL = {
+    "confident": "Confident",
+    "likely": "Likely · confirm in field",
+    "uncertain": "Uncertain · retake photo",
+    "retake": "Photo not usable",
 }
-TIER_ORDER = {"critical": 0, "moderate": 1, "nutritional": 2, "healthy": 3}
+PROBLEMS = load_problems()
+HEAD_META = json.loads((HEAD_DIR / "meta.json").read_text())
+TRAINED = set(HEAD_META["classes"])
 CONDITION_GROUPS = {
-    "Fungal disease": ("moderate", ["Charcoal Rot", "Grey Leaf Spot", "Maydis Leaf Blight", "Northern Leaf Blight", "Common Rust"]),
-    "Insect pests": ("critical", ["Fall Armyworm", "Stem Borer", "Thrips"]),
-    "Nutrient deficiencies": ("nutritional", ["Nitrogen", "Phosphorus", "Potassium", "Zinc"]),
+    "Diseases": ("moderate", [p.name for p in PROBLEMS.values() if p.category == "disease"]),
+    "Insect pests": ("critical", [p.name for p in PROBLEMS.values() if p.category == "pest"]),
+    "Nutrient deficiencies": ("nutritional", [p.name for p in PROBLEMS.values() if p.category == "nutrient"]),
 }
-
-
-def pretty_name(raw: str) -> str:
-    return MAIZE_AGRONOMIC_PROTOCOLS.get(raw, {}).get("name", raw.replace("_", " "))
 
 
 # --- Integrations (fail quietly; the UI reports status) ---
@@ -179,58 +93,9 @@ def upload_image_to_cloud(image_bytes, filename):
 
 # --- Cache Model Pipeline ---
 @st.cache_resource(show_spinner="Warming up the vision model. The first load takes about 30 seconds…")
-def load_vision_pipeline():
-    clf = joblib.load("maize_vlm_classifier.joblib")
-    scaler = joblib.load("maize_vlm_scaler.joblib")
-    class_names = joblib.load("maize_class_names.joblib")
-    vision_id = "google/siglip-base-patch16-384"
-    processor = AutoImageProcessor.from_pretrained(vision_id)
-    vision_model = AutoModel.from_pretrained(
-        vision_id, dtype=torch.float32, low_cpu_mem_usage=True
-    ).to(device)
-    vision_model.eval()
-    gc.collect()
-    return clf, scaler, class_names, processor, vision_model
-
-
-def diagnose(image, clf, scaler, class_names, processor, vision_model):
-    inputs = processor(images=[image], return_tensors="pt").to(device, dtype=torch.float32)
-    with torch.no_grad():
-        out = vision_model.vision_model(inputs["pixel_values"]).last_hidden_state
-        feat = torch.cat([out.mean(dim=1), out.max(dim=1).values], dim=-1)
-        feat = feat / feat.norm(dim=-1, keepdim=True)
-        feat_scaled = scaler.transform(feat.cpu().float().numpy())
-
-    probs = clf.predict_proba(feat_scaled)[0]
-    top_idx = int(np.argmax(probs))
-    max_conf = float(probs[top_idx]) * 100
-    top3 = [(pretty_name(class_names[i]), float(probs[i]) * 100) for i in np.argsort(probs)[::-1][:3]]
-
-    if max_conf < HEALTHY_THRESHOLD:
-        return {
-            "title": "No disorder detected",
-            "severity": "Healthy · asymptomatic",
-            "tier": "healthy",
-            "agent": "None",
-            "rx": "Maintain standard fertigation and periodic foliar scouting.",
-            "conf": max_conf,
-            "top3": top3,
-        }
-
-    raw_class = class_names[top_idx]
-    meta = MAIZE_AGRONOMIC_PROTOCOLS.get(raw_class, {
-        "name": raw_class.replace("_", " "), "agent": "Unknown", "severity": "Check field",
-        "tier": "moderate", "chemical": "Consult the regional agricultural extension office.",
-    })
-    return {
-        "title": meta["name"],
-        "severity": meta["severity"],
-        "tier": meta["tier"],
-        "agent": meta["agent"],
-        "rx": meta["chemical"],
-        "conf": max_conf,
-        "top3": top3,
-    }
+def load_diagnoser():
+    api_key = _secret("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
+    return MaizeDiagnoser(openai_api_key=api_key, second_check_model=_secret("SECOND_CHECK_MODEL"))
 
 
 # --- Session state ---
@@ -251,10 +116,10 @@ def reset_batch():
 with st.sidebar:
     st.markdown(
         ui.sidebar_about([
-            ("Training", "1,394 images"),
-            ("Validation", "398 · 98.99%"),
-            ("Holdout test", "200 · 100.0%"),
-            ("Classes", "12 conditions"),
+            ("Training images", f"{sum(HEAD_META['support'].values()):,}"),
+            ("Classes trained", str(len(TRAINED))),
+            ("IIMR problems covered", str(len(PROBLEMS))),
+            ("Held-out top-3", f"{HEAD_META.get('eval', {}).get('top3', 0):.0%}"),
         ]),
         unsafe_allow_html=True,
     )
@@ -264,15 +129,15 @@ st.markdown(ui.topbar(), unsafe_allow_html=True)
 st.markdown(ui.hero(), unsafe_allow_html=True)
 st.markdown(
     ui.stat_strip([
-        ("12", "maize conditions detected"),
-        ("98.99%", "validation accuracy"),
-        ("1,992", "curated field images"),
-        ("384px", "SigLIP vision encoder"),
-    ]),
+            (str(len(PROBLEMS)), "ICAR-IIMR maize problems"),
+            (f"{HEAD_META.get('eval', {}).get('top3', 0):.0%}", "held-out top-3 accuracy"),
+            (f"{sum(HEAD_META['support'].values()):,}", "labelled training images"),
+            ("2-stage", "SigLIP + second check"),
+        ]),
     unsafe_allow_html=True,
 )
 
-clf, scaler, class_names, processor, vision_model = load_vision_pipeline()
+diagnoser = load_diagnoser()
 
 # --- Workspace ---
 col_session, col_upload = st.columns([1, 1.65], gap="large")
@@ -295,7 +160,7 @@ with col_session:
 
 with col_upload:
     with st.container(border=True, key="cvcard_upload"):
-        st.markdown(ui.section("02", "Leaf specimens", "Clear, well-lit photos of a single leaf work best. JPG, PNG or WEBP."), unsafe_allow_html=True)
+        st.markdown(ui.section("02", "Plant photos", "Close, well-lit photos of the affected leaf, stalk (split open if rotting), cob or tassel. JPG, PNG or WEBP."), unsafe_allow_html=True)
         uploaded_files = st.file_uploader(
             "Leaf images",
             type=["jpg", "jpeg", "png", "webp"],
@@ -332,7 +197,7 @@ with col_upload:
         else:
             run_batch = False
             st.markdown(
-                '<div class="cv-sec-d" style="margin:18px 0 0">The model recognises 12 conditions:</div>'
+                '<div class="cv-sec-d" style="margin:18px 0 0">MaizeGPT checks for these ICAR-IIMR maize problems:</div>'
                 + ui.condition_groups(CONDITION_GROUPS),
                 unsafe_allow_html=True,
             )
@@ -347,7 +212,10 @@ if run_batch and uploaded_files:
             st.write(f"**{idx + 1}/{total}** · `{file.name}`: extracting visual features and classifying")
             image_bytes = file.getvalue()
             image = Image.open(file).convert("RGB")
-            dx = diagnose(image, clf, scaler, class_names, processor, vision_model)
+            dx = diagnoser.diagnose(image)
+            dx["severity"] = STATUS_LABEL.get(dx["status"], dx["status"])
+            dx["advice_view"] = advice_text(dx)
+            dx["rx"] = " ".join(dx["advice_view"]["steps"] + dx["advice_view"]["chemical"])
 
             cloud_url = "Not archived"
             if archive_imgs:
@@ -357,7 +225,7 @@ if run_batch and uploaded_files:
             now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             rows_for_sheet.append([
                 now_str, file.name, cloud_url, dx["title"], f"{dx['conf']:.2f}%",
-                dx["severity"], field_agent, plot_id,
+                dx["severity"], field_agent, plot_id, ", ".join(n for n, _ in dx["top3"]),
             ])
             results.append({**dx, "file": file.name, "url": cloud_url, "image": image, "time": now_str})
             progress.progress((idx + 1) / total)
@@ -394,7 +262,7 @@ if run_batch and uploaded_files:
 if ss.results:
     results, meta = ss.results, ss.run_meta
     n = len(results)
-    need_action = sum(1 for r in results if r["tier"] == "critical")
+    need_action = sum(1 for r in results if r["status"] == "confident" and r["tier"] in ("critical", "moderate"))
     avg_conf = float(np.mean([r["conf"] for r in results]))
 
     st.markdown('<div id="cv-results" style="height:40px;scroll-margin-top:8px"></div>', unsafe_allow_html=True)
@@ -413,9 +281,9 @@ if ss.results:
         st.button("New batch", icon=":material/restart_alt:", width="stretch", on_click=reset_batch)
 
     k1, k2, k3, k4 = st.columns(4)
-    k1.markdown(ui.kpi("Specimens analysed", str(n), foot="Leaf images in this batch"), unsafe_allow_html=True)
+    k1.markdown(ui.kpi("Specimens analysed", str(n), foot="Photos in this batch"), unsafe_allow_html=True)
     k2.markdown(
-        ui.kpi("Need urgent action", str(need_action), foot="Critical or high severity", alert=need_action > 0),
+        ui.kpi("Need urgent action", str(need_action), foot="Confident pest or disease", alert=need_action > 0),
         unsafe_allow_html=True,
     )
     k3.markdown(ui.kpi("Mean confidence", f"{avg_conf:.1f}", suffix="%", foot="Average of top predictions"), unsafe_allow_html=True)
@@ -437,13 +305,11 @@ if ss.results:
                 with c_dx:
                     st.markdown(
                         ui.diagnosis_head(r["tier"], r["severity"], r["title"], r["agent"])
+                        + ui.status_banner(r["status"], r["problem_id"])
                         + ui.confidence_meter(r["conf"])
-                        + ui.differential(
-                            r["top3"],
-                            f"Closest matches (below {HEALTHY_THRESHOLD:.0f}% threshold)" if r["tier"] == "healthy"
-                            else "Differential diagnosis",
-                        )
-                        + ui.rx(r["rx"], healthy=r["tier"] == "healthy")
+                        + ui.differential(r["top3"], "Possible causes (top 3)")
+                        + ui.signs_block(r["signs"], r["visible_signs"])
+                        + ui.advice_block(r["advice_view"], r["status"])
                         + ui.archive_link(r["url"]),
                         unsafe_allow_html=True,
                     )
@@ -454,7 +320,9 @@ if ss.results:
         "Confidence": f"{r['conf']:.2f}%",
         "Severity": r["severity"],
         "Causal Factor": r["agent"],
-        "Recommended Prescription": r["rx"],
+        "Status": r["severity"],
+        "Top 3": "; ".join(n for n, _ in r["top3"]),
+        "Recommended Action": r["rx"],
         "Image URL": r["url"],
         "Plot": meta["plot"],
         "Officer": meta["officer"],
@@ -468,7 +336,7 @@ if ss.results:
             "Severity": r["severity"],
             "Confidence": round(r["conf"], 1),
             "Causal agent": r["agent"],
-            "Treatment": r["rx"],
+            "Action": r["rx"],
             "Image": r["url"] if str(r["url"]).startswith("http") else None,
         } for r in results])
         st.dataframe(
@@ -478,7 +346,7 @@ if ss.results:
             column_config={
                 "Confidence": st.column_config.ProgressColumn("Confidence", min_value=0, max_value=100, format="%.1f%%"),
                 "Image": st.column_config.LinkColumn("Image", display_text="Open ↗"),
-                "Treatment": st.column_config.TextColumn("Treatment", width="large"),
+                "Action": st.column_config.TextColumn("Action", width="large"),
             },
         )
 
