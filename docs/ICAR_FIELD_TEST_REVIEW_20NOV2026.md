@@ -3,7 +3,7 @@
 ## Summary
 - **The report (`VLM_Diagnostic_Graphical_Analysis_06-11-2026.pdf`, 18/45 correct) was produced by the old v1 model, not the current app.** We re-ran v1 on the same 45 images and it reproduced the report's prediction on 41 of 45. The 4 differences are borderline cases affected by image compression. The labels in the report ("Healthy Maize Specimen", "Fall Army worm", "Trips") are v1's raw class names. The current app at https://maizegpt-vlm.streamlit.app does not use them.
 - **On the same 45 images, the current app (with the fixes below) gets:**
-  - the top answer right on **26 of 45 (58%)**;
+  - the top answer right on **25 of 45 (56%)**;
   - the correct cause in its **top 3 on 37 of 45 (82%)**;
   - **0 sick plants called "healthy"** (v1 did this 8 times).
 - **The test photos showed two problems in our training data,** now fixed: two photos in our own agronomist set were mislabelled.
@@ -12,13 +12,13 @@
 
 | | v1 (in the report) | Current app |
 |---|---:|---:|
-| Top answer correct | 18 / 45 (40%) | **26 / 45 (58%)** |
+| Top answer correct | 18 / 45 (40%) | **25 / 45 (56%)** |
 | Correct cause in top 3 | – | **37 / 45 (82%)** |
 | Sick plant called "healthy" | 8 | **0** |
-| Answers shown as "confident" | – | 18, of which 16 correct (89%) |
+| Answers shown as "confident" | – | 19, of which 17 correct (89%) |
 
 **Notes on the results:**
-- **Images 39 of 45 were never seen in training:** top answer 22 of 39 (56%); top 3, 32 of 39 (82%).
+- **Images 39 of 45 were never seen in training:** top answer 20 of 39 (51%); top 3, 31 of 39 (79%).
 - **v1 could not output 16 of the 45 answers at all.** It only knew 12 problems, so bacterial stalk rot, BLSB, Fusarium stalk rot, downy mildew, smut, aphid, viral stripe, bacterial leaf streak and southern rust were always wrong. The current app covers all 32 IIMR problems.
 - **The test images are the small copies embedded in the spreadsheet** (161–512 px). Accuracy on the original photos may be somewhat higher.
 - **Run-to-run variation:** the second check is an AI model, and repeated runs vary by about ±2 images.
@@ -42,6 +42,7 @@
 4. **Safety:**
    - **Nutrient deficiencies are never shown as "confident".** The app gives field checks and recommends a soil or tissue test, because downy mildew was being called zinc deficiency.
    - **The app does not say "healthy" if its second check describes any spot or mark,** even when both models lean healthy.
+   - **Rust photos always get the second check.** A southern rust photo had been shown as "confident" common rust. On 100 held-out common rust photos accuracy is unchanged (89%), and none was switched to southern rust; fewer of them are now shown as "confident" (38 instead of 76).
 
 ## Still not right (needs data, not code)
 - **Downy mildew** (test images #11 and #42) is still called zinc deficiency, now only as "likely". Our training set has 12 downy mildew photos.
@@ -58,4 +59,4 @@
 python evals/icar_field_set/build_from_xlsx.py "Test 2_VLM_Diagnostic_Report_05-11-2026.xlsx"   # images + labels.csv
 python evals/icar_field_set/run.py --be-env <path to .env with OPENAI_API_KEY>             # v1 vs current, per image
 ```
-The latest per-image results are in `evals/results/icar_field_set_20261120_1943.csv`. These 45 images are an evaluation set only and are never used for training.
+The latest per-image results are in `evals/results/icar_field_set_20261120_2006.csv`. These 45 images are an evaluation set only and are never used for training.

@@ -50,7 +50,10 @@ HEALTHY_MIN = 0.90        # SigLIP probability needed before "healthy" is even c
 LOW_SUPPORT = 30          # classes trained on fewer images always get a second check
 CONFUSABLE = {"charcoal_rot", "fusarium_stalk_rot", "bacterial_stalk_rot", "maydis_leaf_blight",
               "turcicum_leaf_blight", "grey_leaf_spot", "healthy", "zinc_deficiency", "thrips",
-              "nitrogen_deficiency", "potassium_deficiency"}
+              "nitrogen_deficiency", "potassium_deficiency",
+              # Rusts: the head called a southern (polysora) rust photo common rust at 85% (20 Nov live test);
+              # polysora has few training photos, so always let the second check look.
+              "common_rust", "polysora_rust"}
 LIKELIHOOD = {"high": 0.75, "medium": 0.45, "low": 0.15}
 # Fusion weights: share of the final score given to the SigLIP head (the rest goes to the second check).
 W_SIGLIP_LEAF = float(os.getenv("VLM_W_SIGLIP_LEAF", "0.35"))  # 0.55 before the 20 Nov ICAR field test
