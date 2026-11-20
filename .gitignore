@@ -10,3 +10,4 @@ evals/results/
 .claude/
 .env
 *.log
+evals/icar_field_set

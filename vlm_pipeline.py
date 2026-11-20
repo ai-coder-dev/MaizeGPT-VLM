@@ -26,6 +26,7 @@ import base64
 import io
 import json
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -51,6 +52,13 @@ CONFUSABLE = {"charcoal_rot", "fusarium_stalk_rot", "bacterial_stalk_rot", "mayd
               "turcicum_leaf_blight", "grey_leaf_spot", "healthy", "zinc_deficiency", "thrips",
               "nitrogen_deficiency", "potassium_deficiency"}
 LIKELIHOOD = {"high": 0.75, "medium": 0.45, "low": 0.15}
+# Fusion weights: share of the final score given to the SigLIP head (the rest goes to the second check).
+W_SIGLIP_LEAF = float(os.getenv("VLM_W_SIGLIP_LEAF", "0.35"))  # 0.55 before the 20 Nov ICAR field test
+W_SIGLIP_OTHER = float(os.getenv("VLM_W_SIGLIP_OTHER", "0.15"))  # 0.30 before
+# If the second check is "high" likelihood on a problem, its answer wins over the head.
+LLM_HIGH_OVERRIDE = os.getenv("VLM_LLM_HIGH_OVERRIDE", "0") == "1"
+# "confident" also requires the second check to rate the answer "high".
+CONFIDENT_NEEDS_LLM_HIGH = os.getenv("VLM_CONFIDENT_NEEDS_LLM_HIGH", "0") == "1"
 
 PART_PROMPTS = {
     "leaf": "a close-up photo of a maize leaf",
@@ -73,6 +81,26 @@ class Problem:
     parts: List[str]
     key_signs: str
     look_alikes: List[str]
+
+
+_SYMPTOM_WORDS = re.compile(r"\b(spot|spots|speck|specks|fleck|flecks|mark|marks|dot|dots|patch|patches|lesion|lesions|"
+                            r"pustule|pustules|streak|streaks|stripe|stripes|hole|holes|blotch\w*|discolou?r\w*|"
+                            r"chlorot\w*|necro\w*|rust\w*|damage\w*|insect|insects|larva|larvae|frass|mould|mold|"
+                            r"rot|rotting|wilt\w*|scorch\w*)\b", re.IGNORECASE)
+# A note is a "clean" statement only when it explicitly says nothing is there,
+# e.g. "No spots or lesions visible", "free of damage". "without clear lesion shape" is NOT clean.
+_CLEAN_NOTE = re.compile(r"^\s*(no|none|nothing)\b|\bno (visible |obvious |clear )?(spots?|lesions?|symptoms?|damage|"
+                         r"signs?|pustules?|insects?|discolou?ration)\b|\bfree (of|from)\b|\bnot visible\b", re.IGNORECASE)
+
+
+def describes_symptoms(check: Optional[Dict]) -> bool:
+    """True if the second check's visible-sign notes mention any symptom (ignoring 'no symptoms' notes)."""
+    for note in (check or {}).get("visible_signs", []) or []:
+        # Judge each clause separately: "No obvious damage; a few yellow streaks" still has a symptom.
+        for clause in re.split(r"[;:]|\bbut\b|\bhowever\b|\balthough\b", note, flags=re.IGNORECASE):
+            if _SYMPTOM_WORDS.search(clause) and not _CLEAN_NOTE.search(clause):
+                return True
+    return False
 
 
 def load_problems() -> Dict[str, Problem]:
@@ -198,12 +226,16 @@ class MaizeDiagnoser:
         small.thumbnail((768, 768))
         small.save(buffer, "JPEG", quality=88)
         try:
+            effort = os.getenv("SECOND_CHECK_REASONING", "none")
+            if self.second_check_model.startswith(("gpt-5", "gpt-6", "o")):
+                # Reasoning models accept temperature only when reasoning is off.
+                sampling = {"reasoning_effort": effort, **({"temperature": 0} if effort == "none" else {})}
+            else:
+                sampling = {"temperature": 0}
             response = self.openai.chat.completions.create(
                 model=self.second_check_model,
-                temperature=0,
                 response_format=schema,
-                **({"reasoning_effort": os.getenv("SECOND_CHECK_REASONING", "none")}
-                   if self.second_check_model.startswith(("gpt-5", "gpt-6")) else {}),
+                **sampling,
                 messages=[
                     {"role": "system", "content": prompt},
                     {"role": "user", "content": [
@@ -251,7 +283,7 @@ class MaizeDiagnoser:
             total = sum(llm_scores.values())
             llm_scores = {k: v / max(total, 1.0) for k, v in llm_scores.items()}
             leafy = part in ("leaf", "insect") and check.get("plant_part") in ("leaf", "whorl", "insect")
-            w_siglip = 0.55 if leafy else 0.3
+            w_siglip = W_SIGLIP_LEAF if leafy else W_SIGLIP_OTHER
             scores = {}
             for cid in set(siglip) | set(llm_scores):
                 s = siglip.get(cid, 0.0)
@@ -261,6 +293,12 @@ class MaizeDiagnoser:
         else:
             scores = dict(siglip)
         fused = sorted(scores.items(), key=lambda kv: -kv[1])
+        first_llm = ((check or {}).get("candidates") or [{}])[0]
+        if LLM_HIGH_OVERRIDE and first_llm.get("likelihood") == "high" and first_llm.get("id") in scores \
+                and first_llm.get("id") != "healthy":
+            winner = first_llm["id"]
+            scores[winner] = max(scores[winner], fused[0][1] + 0.01)
+            fused = sorted(scores.items(), key=lambda kv: -kv[1])
         final_id, final_score = fused[0]
         llm_top = max(llm_scores, key=llm_scores.get) if llm_scores else None
         agree = llm_top is None or llm_top == final_id
@@ -282,7 +320,9 @@ class MaizeDiagnoser:
             status = "retake"
         elif final_id == "healthy":
             llm_says_healthy = first_cand.get("id") == "healthy" and first_cand.get("likelihood") in ("high", "medium")
-            healthy_ok = siglip.get("healthy", 0.0) >= HEALTHY_MIN and (check is None or llm_says_healthy)
+            # Even then, not healthy if the second check describes any symptom (e.g. "a few tiny specks").
+            healthy_ok = (siglip.get("healthy", 0.0) >= HEALTHY_MIN and (check is None or llm_says_healthy)
+                          and not describes_symptoms(check))
             if healthy_ok:
                 status = "confident"
             else:  # never call a plant healthy unless both models agree
@@ -292,12 +332,19 @@ class MaizeDiagnoser:
             status = "confident" if top_p >= CONFIDENT and top_id not in CONFUSABLE else "likely"
         elif not llm_scores:
             status = "likely" if top_p >= 0.6 else "uncertain"  # second check gave no opinion
-        elif agree and (llm_high or siglip.get(final_id, 0.0) >= 0.6) and final_score >= LIKELY:
+        elif agree and (llm_high if CONFIDENT_NEEDS_LLM_HIGH else (llm_high or siglip.get(final_id, 0.0) >= 0.6)) \
+                and final_score >= LIKELY:
             status = "confident"
         elif final_score >= LIKELY or agree:
             status = "likely"
         else:
             status = "uncertain"
+
+        # Nutrient deficiencies look like several diseases (e.g. downy mildew, thrips) and should be
+        # confirmed by a soil/tissue test, so they are never shown as "confident".
+        if status == "confident" and self.problems.get(final_id) is not None \
+                and self.problems[final_id].category == "nutrient":
+            status = "likely"
 
         problem = self.problems.get(final_id)
         advice = self.advice.get(final_id, {})
